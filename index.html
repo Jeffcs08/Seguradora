@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mainlock Seguros</title>
+
+<style>
+/* RESET E ESTILOS GERAIS */
+*{margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', sans-serif;}
+html{scroll-behavior: smooth;}
+body{background:#f4f6f8; color:#333; line-height:1.6;}
+a{text-decoration:none; color:inherit;}
+button{cursor:pointer;}
+
+/* VARIÁVEIS DE CORES */
+:root {
+    --azul-marinho: #192C3D;
+    --dourado: #ffd700;
+    --branco: #fff;
+}
+
+/* HEADER */
+header{
+  background:var(--azul-marinho); color:var(--dourado); 
+  display:flex; justify-content:space-between; align-items:center; 
+  padding:15px 30px; position:sticky; top:0; z-index:1000;
+}
+header img.logo{height:120px;} /* Logo maior */
+header nav a{
+  margin-left:25px; font-weight:bold; transition:0.3s; color:#ffcc00;
+}
+header nav a:hover{color:var(--branco); transform:scale(1.05);}
+
+/* ===== HERO SECTION ===== */
+.hero {
+    background: linear-gradient(135deg, var(--azul-marinho) 0%, #004080 100%);
+    color: var(--branco);
+    padding: 100px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffd700" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,192C1248,192,1344,128,1392,96L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+    background-size: cover;
+    background-position: center;
+    z-index: 0;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.hero h1 {
+    color: var(--dourado);
+    font-size: 3rem;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero p {
+    font-size: 1.2rem;
+    max-width: 700px;
+    margin: 0 auto 30px;
+    line-height: 1.8;
+}
+
+.hero-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    display: inline-block;
+    padding: 12px 30px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.hero .btn {
+    background-color: var(--dourado);
+    color: var(--azul-marinho);
+}
+
+.hero .btn-secondary {
+    background-color: transparent;
+    border: 2px solid var(--dourado);
+    color: var(--dourado);
+}
+
+.hero .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.hero .btn-secondary:hover {
+    background-color: var(--dourado);
+    color: var(--azul-marinho);
+}
+
+/* SEÇÕES */
+section{
+  padding:60px 20px; max-width:1200px; margin:0 auto;
+}
+h2{color:#ffcc00; margin-bottom:20px; font-size:2rem;}
+.cards{display:flex; flex-wrap:wrap; gap:20px;}
+.card{
+  background:#fff; border-radius:10px; padding:20px; flex:1 1 300px; 
+  box-shadow:0 4px 8px rgba(0,0,0,0.1); transition:transform 0.3s, box-shadow 0.3s;
+}
+.card:hover{
+  transform:translateY(-8px); box-shadow:0 8px 20px rgba(0,0,0,0.2);
+}
+.card img{max-width:100%; border-radius:10px; margin-bottom:10px; transition:transform 0.3s;}
+.card img:hover{transform:scale(1.08);}
+
+/* FORMULÁRIOS */
+form{
+  background:#fff; padding:20px; border-radius:10px; 
+  box-shadow:0 4px 8px rgba(0,0,0,0.1); max-width:500px; margin:0 auto;
+}
+input, select, textarea{width:100%; padding:10px; margin-bottom:15px; border:1px solid #ccc; border-radius:5px;}
+button.btn{background:#192C3D; color:#ffd700; padding:10px 20px; border:none; border-radius:5px; transition:0.3s;}
+button.btn:hover{background:#192C3D; transform:scale(1.05);}
+.error-message{margin-top:-10px; margin-bottom:10px; color:red; font-size:0.9rem;}
+
+/* ESTILOS PARA MOSTRAR/ESCONDER SENHA */
+.password-container {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.password-container input {
+  padding-right: 40px; /* Espaço para o ícone */
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.toggle-password:hover {
+  color: #192C3D;
+}
+
+.show-password-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+}
+
+.show-password-container input[type="checkbox"] {
+  width: auto;
+  margin-right: 8px;
+  margin-bottom: 0;
+}
+
+/* ESTILOS PARA 2FA */
+.two-factor-section {
+  display: none;
+  text-align: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.code-inputs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.code-input {
+  width: 50px;
+  height: 60px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  transition: all 0.3s;
+  background: #f9f9f9;
+}
+
+.code-input:focus {
+  border-color: #192C3D;
+  background: #fff;
+  outline: none;
+  box-shadow: 0 0 10px rgba(25, 44, 61, 0.3);
+  transform: scale(1.05);
+}
+
+.code-display {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #192C3D;
+  background: #f0f0f0;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 20px 0;
+  letter-spacing: 5px;
+}
+
+.timer {
+  font-size: 1rem;
+  color: #666;
+  margin: 10px 0;
+  font-weight: bold;
+}
+
+.resend-code {
+  background: none;
+  border: none;
+  color: #192C3D;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+
+.resend-code:disabled {
+  color: #999;
+  cursor: not-allowed;
+}
+
+.quick-login-btn {
+  background: #27ae60 !important;
+  margin-top: 10px;
+}
+
+.quick-login-btn:hover {
+  background: #219653 !important;
+  transform: scale(1.05);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* LOADING */
+.loading {
+  display: none;
+  text-align: center;
+  margin: 10px 0;
+}
+
+.loading-spinner {
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #192C3D;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* CHAT */
+.chat-box{background:#fff; border-radius:10px; padding:15px; max-width:400px; margin:0 auto; box-shadow:0 4px 8px rgba(0,0,0,0.1);}
+.chat-messages{height:200px; overflow-y:auto; border:1px solid #ccc; padding:10px; margin-bottom:10px; border-radius:5px; background:#f9f9f9;}
+.chat-messages p{margin-bottom:5px;}
+.chat-input{display:flex; gap:10px;}
+
+/* FOOTER */
+footer{background:#192C3D; color:#ffd700; text-align:center; padding:20px 10px; margin-top:40px;}
+
+/* LINK DE CRIAR CONTA EM DOURADO */
+.create-account-link {
+  color: var(--dourado) !important;
+  font-weight: bold;
+  text-decoration: underline;
+  transition: all 0.3s ease;
+}
+
+.create-account-link:hover {
+  color: #ffcc00 !important;
+  transform: scale(1.05);
+}
+
+/* NOVOS ESTILOS PARA SIMULAÇÃO DE COTAÇÃO */
+.simulacao-section {
+  background: #e8ebf1;
+  border-radius: 10px;
+  padding: 60px 20px;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tab-btn {
+  background: #fff;
+  color: #192C3D;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.tab-btn.active {
+  background: #192C3D;
+  color: #ffd700;
+}
+
+.tab-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.tab-content {
+  display: none;
+  background: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.tab-content.active {
+  display: block;
+  animation: fadeIn 0.5s ease;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-row {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.form-row .form-group {
+  flex: 1;
+  min-width: 200px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #192C3D;
+}
+
+.resultado-cotacao {
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 20px;
+  display: none;
+}
+
+.resultado-cotacao h3 {
+  color: #192C3D;
+  margin-bottom: 15px;
+}
+
+.valor-cotacao {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #192C3D;
+  margin: 10px 0;
+}
+
+.detalhes-cotacao {
+  margin: 15px 0;
+}
+
+.detalhes-cotacao p {
+  margin: 8px 0;
+}
+
+.btn-cotacao {
+  background: #192C3D;
+  color: #ffd700;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: block;
+  margin: 20px auto 0;
+  width: 100%;
+  max-width: 300px;
+}
+
+.btn-cotacao:hover {
+  background: #152536;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* RESPONSIVO */
+@media(max-width:768px){
+  .hero {
+    padding: 70px 20px;
+  }
+  
+  .hero h1 {
+    font-size: 2.2rem;
+  }
+  
+  .hero p {
+    font-size: 1.1rem;
+  }
+  
+  .hero-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .hero-buttons .btn {
+    width: 80%;
+    text-align: center;
+  }
+  
+  .code-inputs {
+    gap: 8px;
+  }
+  
+  .code-input {
+    width: 45px;
+    height: 55px;
+    font-size: 1.3rem;
+  }
+  
+  .code-display {
+    font-size: 1.5rem;
+    padding: 12px;
+  }
+  
+  .tabs {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .tab-btn {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .form-row {
+    flex-direction: column;
+  }
+  
+  .form-row .form-group {
+    min-width: 100%;
+  }
+}
+
+@media(max-width:480px){
+  .hero h1 {
+    font-size: 1.8rem;
+  }
+  
+  .hero p {
+    font-size: 1rem;
+  }
+  
+  .code-inputs {
+    gap: 5px;
+  }
+  
+  .code-input {
+    width: 40px;
+    height: 50px;
+    font-size: 1.2rem;
+  }
+  
+  .code-display {
+    font-size: 1.3rem;
+    padding: 10px;
+  }
+  
+  .tab-content {
+    padding: 20px 15px;
+  }
+  
+  .valor-cotacao {
+    font-size: 1.5rem;
+  }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <img src="img/img-logo.png" alt="Mainlock Seguros" class="logo">
+  <nav>
+    <a href="#sobre">Sobre</a>
+    <a href="#planos">Planos</a>
+    <a href="#simulacao">Simulação</a>
+    <a href="#clientes">Clientes</a>
+    <a href="#parcerias">Parcerias</a>
+    <a href="#loginSection">Login</a>
+  </nav>
+</header>
+
+<!-- HERO SECTION -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Proteção Completa para o que é Importante</h1>
+    <p>Na Mainlock Seguros, oferecemos soluções personalizadas para proteger seu patrimônio, sua família e seu futuro com segurança e agilidade.</p>
+    <div class="hero-buttons">
+      <a href="#planos" class="btn">Conhecer Planos</a>
+      <a href="#simulacao" class="btn btn-secondary">Simular Cotação</a>
+    </div>
+  </div>
+</section>
+
+<!-- SOBRE -->
+<section id="sobre">
+  <center><h2>Sobre a Mainlock Seguros</h2>
+  <p style="font-weight: bold;">Fundada em 2025, a Mainlock Seguros S.A. oferece segurança, agilidade e atendimento digital de alta qualidade.</p> </center>
+  <div class="cards">
+    <div class="card"><img src="img/img-fundacao.jpg" alt="Fundação"><center><p style="font-weight: bold;">Fundação: 2025</p></div></center>
+    <div class="card"><img src="img/img-equipe.jpg" alt="Equipe"><center><p style="font-weight: bold;">Equipe especializada</p></div></center>
+    <div class="card"><img src="img/img-valores.jpg" alt="Valores"><center><p style="font-weight: bold;">Missão, Visão e Valores</p></div></center>
+  </div>
+</section>
+
+<!-- PLANOS -->
+<section id="planos" style="background:#e8ebf1; border-radius:10px;">
+  <center> <h2>Planos de Seguro</h2></center>
+  <div class="cards">
+    <div class="card">
+      <img src="img/img-automovel.jpg" alt="Seguro Automóvel">
+      <center> <strong>Seguro Automóvel</strong>
+      <p>Cobertura completa a partir de R$ 120/mês</p>
+      <a href="#simulacao" class="btn">Simular Cotação</a></center>
+    </div>
+    <div class="card">
+      <img src="img/img-residencial.jpg" alt="Seguro Residencial">
+      <center><strong>Seguro Residencial</strong>
+        <p>Proteção para sua casa a partir de R$ 90/mês</p>
+      <a href="#simulacao" class="btn">Simular Cotação</a></center>
+    </div>
+    <div class="card">
+      <img src="img/img-vida.jpg" alt="Seguro Vida">
+      <center><strong>Seguro de Vida</strong>
+      <p>Planos de vida seguros e acessíveis</p>
+      <a href="#simulacao" class="btn">Simular Cotação</a></center>
+    </div>
+  </div>
+</section>
+
+<!-- SIMULAÇÃO DE COTAÇÃO -->
+<section id="simulacao" class="simulacao-section">
+  <center><h2>Simulação de Cotação</h2></center>
+  
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="automovel">Seguro Automóvel</button>
+    <button class="tab-btn" data-tab="residencial">Seguro Residencial</button>
+    <button class="tab-btn" data-tab="vida">Seguro de Vida</button>
+  </div>
+  
+  <!-- SEGURO AUTOMÓVEL -->
+  <div id="automovel" class="tab-content active">
+    <form id="cotacao-automovel">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="marca">Marca do Veículo</label>
+          <select id="marca" required>
+            <option value="">Selecione a marca</option>
+            <option value="volkswagen">Volkswagen</option>
+            <option value="fiat">Fiat</option>
+            <option value="chevrolet">Chevrolet</option>
+            <option value="ford">Ford</option>
+            <option value="toyota">Toyota</option>
+            <option value="honda">Honda</option>
+            <option value="hyundai">Hyundai</option>
+            <option value="renault">Renault</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="modelo">Modelo</label>
+          <input type="text" id="modelo" placeholder="Ex: Gol, Onix, HB20" required>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="ano">Ano do Veículo</label>
+          <select id="ano" required>
+            <option value="">Selecione o ano</option>
+            <option value="2024">2024</option>
+            <option value="2023">2023</option>
+            <option value="2022">2022</option>
+            <option value="2021">2021</option>
+            <option value="2020">2020</option>
+            <option value="2019">2019</option>
+            <option value="2018">2018</option>
+            <option value="2017">2017</option>
+            <option value="2016">2016</option>
+            <option value="2015">2015</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="valor-veiculo">Valor do Veículo (R$)</label>
+          <input type="number" id="valor-veiculo" placeholder="Ex: 45000" required>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="idade-condutor">Idade do Condutor</label>
+          <input type="number" id="idade-condutor" placeholder="Ex: 30" required>
+        </div>
+        <div class="form-group">
+          <label for="cep">CEP de Garagem</label>
+          <input type="text" id="cep" placeholder="00000-000" required>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="cobertura">Tipo de Cobertura</label>
+        <select id="cobertura" required>
+          <option value="">Selecione a cobertura</option>
+          <option value="basica">Cobertura Básica</option>
+          <option value="completa">Cobertura Completa</option>
+          <option value="premium">Cobertura Premium</option>
+        </select>
+      </div>
+      
+      <button type="submit" class="btn-cotacao">Simular Cotação</button>
+    </form>
+    
+    <div id="resultado-automovel" class="resultado-cotacao">
+      <h3>Sua Cotação - Seguro Automóvel</h3>
+      <div class="valor-cotacao">R$ <span id="valor-cotacao-auto">0,00</span>/mês</div>
+      <div class="detalhes-cotacao">
+        <p><strong>Modelo:</strong> <span id="detalhe-modelo"></span></p>
+        <p><strong>Ano:</strong> <span id="detalhe-ano"></span></p>
+        <p><strong>Cobertura:</strong> <span id="detalhe-cobertura-auto"></span></p>
+      </div>
+      <a href="https://wa.me/5511946155313" target="_blank" class="btn">Contratar via WhatsApp</a>
+    </div>
+  </div>
+  
+  <!-- SEGURO RESIDENCIAL -->
+  <div id="residencial" class="tab-content">
+    <form id="cotacao-residencial">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="tipo-imovel">Tipo de Imóvel</label>
+          <select id="tipo-imovel" required>
+            <option value="">Selecione o tipo</option>
+            <option value="casa">Casa</option>
+            <option value="apartamento">Apartamento</option>
+            <option value="sobrado">Sobrado</option>
+            <option value="kitnet">Kitnet</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="valor-imovel">Valor do Imóvel (R$)</label>
+          <input type="number" id="valor-imovel" placeholder="Ex: 250000" required>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="area-imovel">Área Construída (m²)</label>
+          <input type="number" id="area-imovel" placeholder="Ex: 80" required>
+        </div>
+        <div class="form-group">
+          <label for="cep-residencia">CEP do Imóvel</label>
+          <input type="text" id="cep-residencia" placeholder="00000-000" required>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="cobertura-residencia">Tipo de Cobertura</label>
+        <select id="cobertura-residencia" required>
+          <option value="">Selecione a cobertura</option>
+          <option value="basica">Cobertura Básica (Incêndio e danos elétricos)</option>
+          <option value="completa">Cobertura Completa (Básica + roubo e danos a terceiros)</option>
+          <option value="premium">Cobertura Premium (Completa + assistências)</option>
+        </select>
+      </div>
+      
+      <button type="submit" class="btn-cotacao">Simular Cotação</button>
+    </form>
+    
+    <div id="resultado-residencial" class="resultado-cotacao">
+      <h3>Sua Cotação - Seguro Residencial</h3>
+      <div class="valor-cotacao">R$ <span id="valor-cotacao-residencia">0,00</span>/mês</div>
+      <div class="detalhes-cotacao">
+        <p><strong>Tipo de Imóvel:</strong> <span id="detalhe-tipo-imovel"></span></p>
+        <p><strong>Área:</strong> <span id="detalhe-area"></span> m²</p>
+        <p><strong>Cobertura:</strong> <span id="detalhe-cobertura-residencia"></span></p>
+      </div>
+      <a href="https://wa.me/5511946155313" target="_blank" class="btn">Contratar via WhatsApp</a>
+    </div>
+  </div>
+  
+  <!-- SEGURO DE VIDA -->
+  <div id="vida" class="tab-content">
+    <form id="cotacao-vida">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="idade-segurado">Idade do Segurado</label>
+          <input type="number" id="idade-segurado" placeholder="Ex: 35" required>
+        </div>
+        <div class="form-group">
+          <label for="valor-seguro">Valor do Seguro (R$)</label>
+          <input type="number" id="valor-seguro" placeholder="Ex: 100000" required>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="profissao">Profissão</label>
+          <select id="profissao" required>
+            <option value="">Selecione a profissão</option>
+            <option value="administrativo">Administrativo</option>
+            <option value="comercio">Comércio</option>
+            <option value="saude">Saúde</option>
+            <option value="educacao">Educação</option>
+            <option value="tecnologia">Tecnologia</option>
+            <option value="construcao">Construção Civil</option>
+            <option value="transporte">Transporte</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="periodo">Período de Cobertura</label>
+          <select id="periodo" required>
+            <option value="">Selecione o período</option>
+            <option value="10">10 anos</option>
+            <option value="15">15 anos</option>
+            <option value="20">20 anos</option>
+            <option value="25">25 anos</option>
+            <option value="30">30 anos</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="cobertura-vida">Tipo de Cobertura</label>
+        <select id="cobertura-vida" required>
+          <option value="">Selecione a cobertura</option>
+          <option value="basica">Cobertura Básica (Morte e invalidez permanente)</option>
+          <option value="completa">Cobertura Completa (Básica + doenças graves)</option>
+          <option value="premium">Cobertura Premium (Completa + diária por incapacidade)</option>
+        </select>
+      </div>
+      
+      <button type="submit" class="btn-cotacao">Simular Cotação</button>
+    </form>
+    
+    <div id="resultado-vida" class="resultado-cotacao">
+      <h3>Sua Cotação - Seguro de Vida</h3>
+      <div class="valor-cotacao">R$ <span id="valor-cotacao-vida">0,00</span>/mês</div>
+      <div class="detalhes-cotacao">
+        <p><strong>Idade do Segurado:</strong> <span id="detalhe-idade"></span> anos</p>
+        <p><strong>Valor Segurado:</strong> R$ <span id="detalhe-valor-seguro"></span></p>
+        <p><strong>Cobertura:</strong> <span id="detalhe-cobertura-vida"></span></p>
+      </div>
+      <a href="https://wa.me/5511946155313" target="_blank" class="btn">Contratar via WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<!-- CLIENTES -->
+<section id="clientes">
+  <center><h2>Clientes e Depoimentos</h2></center>
+  <div class="cards">
+    <div class="card"><img src="img/img-cliente1.jpg" alt="Cliente 1"><center><p style="font-weight: bold;"> "Atendimento excelente!"</p></center></div>
+    <div class="card"><img src="img/img-cliente2.jpg" alt="Cliente 2"><center><p style="font-weight: bold;">"Seguro rápido e confiável."</p></center></div>
+    <div class="card"><img src="img/img-cliente3.jpg" alt="Cliente 3"><center><p style="font-weight: bold;">"Recomendo para todos."</p></div></center>
+  </div>
+</section>
+
+<!-- PARCERIAS -->
+<section id="parcerias" style="background:#e8ebf1; border-radius:10px;">
+  <center><h2>Parcerias</h2></center>
+  <div class="cards">
+    <div class="card"><img src="img/img-parceiro1.png" alt="Parceiro 1"></div>
+    <div class="card"><img src="img/img-parceiro2.png" alt="Parceiro 2"></div>
+    <div class="card"><img src="img/img-parceiro3.png" alt="Parceiro 3"></div>
+  </div>
+</section>
+
+<!-- LOGIN -->
+<section id="loginSection">
+  <center> <h2>Login de Cliente</h2></center>
+  
+  <!-- Formulário de login inicial -->
+  <form id="loginForm">
+    <input type="email" placeholder="Email" required id="loginEmail">
+    
+    <div class="password-container">
+      <input type="password" placeholder="Senha" required id="loginPassword">
+      <button type="button" class="toggle-password" id="togglePassword">👁️</button>
+    </div>
+    
+    <div class="show-password-container">
+      <input type="checkbox" id="showPassword">
+      <label for="showPassword">Mostrar senha</label>
+    </div>
+    
+    <div class="loading" id="loginLoading">
+      <div class="loading-spinner"></div>
+      <p>Verificando credenciais...</p>
+    </div>
+    
+    <button type="submit" class="btn" id="loginBtn">Entrar</button>
+  </form>
+  
+  <!-- Seção de autenticação em dois fatores -->
+  <div id="twoFactorSection" class="two-factor-section">
+    <h3>Verificação de Segurança</h3>
+    <p>Enviamos um código de 6 dígitos para o seu email.</p>
+    
+    <!-- Código visível para facilitar testes -->
+    <div class="code-display" id="codeDisplay"></div>
+    <p><small>Para testes, use o código acima</small></p>
+    
+    <div class="code-inputs">
+      <input type="text" class="code-input" maxlength="1" data-index="0">
+      <input type="text" class="code-input" maxlength="1" data-index="1">
+      <input type="text" class="code-input" maxlength="1" data-index="2">
+      <input type="text" class="code-input" maxlength="1" data-index="3">
+      <input type="text" class="code-input" maxlength="1" data-index="4">
+      <input type="text" class="code-input" maxlength="1" data-index="5">
+    </div>
+    
+    <div class="timer" id="timer">Código válido por: 03:00</div>
+    
+    <div class="loading" id="verifyLoading">
+      <div class="loading-spinner"></div>
+      <p>Verificando código...</p>
+    </div>
+    
+    <button type="button" class="btn" id="verifyCodeBtn">Verificar Código</button>
+    <button type="button" class="resend-code" id="resendCodeBtn" disabled>Reenviar código (30s)</button>
+    
+    <!-- Botão para login rápido (apenas desenvolvimento) -->
+    <button type="button" class="btn quick-login-btn" id="quickLoginBtn">Login Rápido (Preencher Automaticamente)</button>
+  </div>
+  
+  <p style="text-align:center; margin-top:10px;">Não tem uma conta? <a href="#" id="registerLink" class="create-account-link">Criar Conta</a></p>
+</section>
+
+<!-- REGISTRO -->
+<section id="registerSection" style="display:none;">
+  <h2>Criar Conta</h2>
+  <form id="registerForm">
+    <h3 style="margin-bottom:10px; color:#192C3D;">Dados Pessoais</h3>
+    <input type="text" placeholder="Nome completo" required>
+    <input type="email" placeholder="Email" required>
+    <input type="date" placeholder="Data de nascimento" required>
+    <input type="text" id="cpf" placeholder="CPF" maxlength="14" required>
+    <input type="text" id="rg" placeholder="RG" maxlength="12" required>
+    <select required>
+      <option value="">Estado civil</option>
+      <option>Solteiro(a)</option>
+      <option>Casado(a)</option>
+      <option>Divorciado(a)</option>
+      <option>Viúvo(a)</option>
+      <option>União estável</option>
+    </select>
+    <input type="text" placeholder="Nome do pai" required>
+    <input type="text" placeholder="Nome da mãe" required>
+
+    <h3 style="margin:15px 0 10px; color:#192C3D;">Endereço</h3>
+    <input type="text" placeholder="Endereço (rua, avenida...)" required>
+    <input type="text" placeholder="Bairro" required>
+    <input type="text" placeholder="Complemento">
+    <input type="text" placeholder="Número" required>
+    <input type="text" placeholder="Cidade" required>
+    <input type="text" placeholder="Estado" maxlength="2" required>
+    <input type="text" placeholder="CEP" maxlength="9" required>
+
+    <h3 style="margin:15px 0 10px; color:#192C3D;">Segurança da Conta</h3>
+    
+    <div class="password-container">
+      <input type="password" id="password" placeholder="Senha" required>
+      <button type="button" class="toggle-password" id="togglePasswordRegister">👁️</button>
+    </div>
+    
+    <div class="password-container">
+      <input type="password" id="confirmPassword" placeholder="Confirmar senha" required>
+      <button type="button" class="toggle-password" id="toggleConfirmPassword">👁️</button>
+    </div>
+    
+    <div class="show-password-container">
+      <input type="checkbox" id="showPasswordRegister">
+      <label for="showPasswordRegister">Mostrar senhas</label>
+    </div>
+
+    <button type="submit" class="btn">Cadastrar</button>
+    <button type="button" id="cancelRegister" class="btn" style="background:#888; margin-top:10px;">Cancelar</button>
+  </form>
+  <p id="registerMessage" style="display:none; text-align:center; font-weight:bold; margin-top:10px;"></p>
+</section>
+
+<footer font bold style="font-weight: bold; ">
+  Mainlock Seguros &copy; 2025 | <span>Todos os direitos reservados.</span>
+</footer>
+
+<script>
+// ===== MÁSCARAS CPF E RG =====
+function formatCPF(value){ return value.replace(/\D/g,'').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');}
+function formatRG(value){ return value.replace(/\D/g,'').replace(/(\d{2})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1})$/,'$1-$2');}
+const cpfInput=document.getElementById('cpf');
+const rgInput=document.getElementById('rg');
+if(cpfInput) cpfInput.addEventListener('input', e=>{e.target.value=formatCPF(e.target.value);});
+if(rgInput) rgInput.addEventListener('input', e=>{e.target.value=formatRG(e.target.value);});
+
+// ===== FUNCIONALIDADE PARA MOSTRAR/ESCONDER SENHA =====
+function setupPasswordToggle() {
+  // Para o login
+  const togglePasswordBtn = document.getElementById('togglePassword');
+  const passwordInput = document.getElementById('loginPassword');
+  const showPasswordCheckbox = document.getElementById('showPassword');
+  
+  if (togglePasswordBtn && passwordInput) {
+    togglePasswordBtn.addEventListener('click', function() {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      this.textContent = type === 'password' ? '👁️' : '🔒';
+    });
+  }
+  
+  if (showPasswordCheckbox && passwordInput) {
+    showPasswordCheckbox.addEventListener('change', function() {
+      const type = this.checked ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      togglePasswordBtn.textContent = type === 'password' ? '👁️' : '🔒';
+    });
+  }
+  
+  // Para o registro
+  const togglePasswordRegister = document.getElementById('togglePasswordRegister');
+  const passwordRegister = document.getElementById('password');
+  const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+  const confirmPassword = document.getElementById('confirmPassword');
+  const showPasswordRegister = document.getElementById('showPasswordRegister');
+  
+  if (togglePasswordRegister && passwordRegister) {
+    togglePasswordRegister.addEventListener('click', function() {
+      const type = passwordRegister.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordRegister.setAttribute('type', type);
+      this.textContent = type === 'password' ? '👁️' : '🔒';
+    });
+  }
+  
+  if (toggleConfirmPassword && confirmPassword) {
+    toggleConfirmPassword.addEventListener('click', function() {
+      const type = confirmPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+      confirmPassword.setAttribute('type', type);
+      this.textContent = type === 'password' ? '👁️' : '🔒';
+    });
+  }
+  
+  if (showPasswordRegister && passwordRegister && confirmPassword) {
+    showPasswordRegister.addEventListener('change', function() {
+      const type = this.checked ? 'text' : 'password';
+      passwordRegister.setAttribute('type', type);
+      confirmPassword.setAttribute('type', type);
+      togglePasswordRegister.textContent = type === 'password' ? '👁️' : '🔒';
+      toggleConfirmPassword.textContent = type === 'password' ? '👁️' : '🔒';
+    });
+  }
+}
+
+// ===== SIMULAÇÃO DE COTAÇÃO =====
+document.addEventListener('DOMContentLoaded', function() {
+  // Configurar funcionalidade de mostrar/esconder senha
+  setupPasswordToggle();
+  
+  // Sistema de abas
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const tabContents = document.querySelectorAll('.tab-content');
+  
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tabId = btn.getAttribute('data-tab');
+      
+      // Ativar aba clicada
+      tabBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      
+      // Mostrar conteúdo correspondente
+      tabContents.forEach(content => {
+        content.classList.remove('active');
+        if (content.id === tabId) {
+          content.classList.add('active');
+        }
+      });
+    });
+  });
+  
+  // Máscara para CEP
+  const cepInputs = document.querySelectorAll('input[placeholder*="CEP"]');
+  cepInputs.forEach(input => {
+    input.addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 5) {
+        value = value.substring(0,5) + '-' + value.substring(5,8);
+      }
+      e.target.value = value;
+    });
+  });
+  
+  // Simulação de cotação - Automóvel
+  document.getElementById('cotacao-automovel').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const marca = document.getElementById('marca').value;
+    const modelo = document.getElementById('modelo').value;
+    const ano = parseInt(document.getElementById('ano').value);
+    const valorVeiculo = parseFloat(document.getElementById('valor-veiculo').value);
+    const idadeCondutor = parseInt(document.getElementById('idade-condutor').value);
+    const cobertura = document.getElementById('cobertura').value;
+    
+    // Cálculo simplificado do valor do seguro
+    let base = valorVeiculo * 0.03; // 3% do valor do veículo
+    
+    // Ajustes por idade do condutor
+    if (idadeCondutor < 25) base *= 1.3;
+    else if (idadeCondutor > 60) base *= 1.2;
+    
+    // Ajustes por tipo de cobertura
+    if (cobertura === 'completa') base *= 1.5;
+    else if (cobertura === 'premium') base *= 2;
+    
+    // Ajuste por ano do veículo (veículos mais novos têm seguro mais caro)
+    const anoAtual = new Date().getFullYear();
+    const idadeVeiculo = anoAtual - ano;
+    if (idadeVeiculo < 3) base *= 1.2;
+    else if (idadeVeiculo > 10) base *= 0.8;
+    
+    const valorMensal = Math.max(base / 12, 120); // Mínimo de R$ 120
+    
+    // Exibir resultado
+    document.getElementById('valor-cotacao-auto').textContent = valorMensal.toFixed(2);
+    document.getElementById('detalhe-modelo').textContent = modelo;
+    document.getElementById('detalhe-ano').textContent = ano;
+    document.getElementById('detalhe-cobertura-auto').textContent = 
+      cobertura === 'basica' ? 'Cobertura Básica' : 
+      cobertura === 'completa' ? 'Cobertura Completa' : 'Cobertura Premium';
+    
+    document.getElementById('resultado-automovel').style.display = 'block';
+  });
+  
+  // Simulação de cotação - Residencial
+  document.getElementById('cotacao-residencial').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const tipoImovel = document.getElementById('tipo-imovel').value;
+    const valorImovel = parseFloat(document.getElementById('valor-imovel').value);
+    const areaImovel = parseFloat(document.getElementById('area-imovel').value);
+    const cobertura = document.getElementById('cobertura-residencia').value;
+    
+    // Cálculo simplificado do valor do seguro
+    let base = valorImovel * 0.001; // 0.1% do valor do imóvel
+    
+    // Ajustes por tipo de imóvel
+    if (tipoImovel === 'apartamento') base *= 0.9;
+    else if (tipoImovel === 'sobrado') base *= 1.1;
+    
+    // Ajustes por área
+    if (areaImovel > 150) base *= 1.2;
+    else if (areaImovel < 50) base *= 0.9;
+    
+    // Ajustes por tipo de cobertura
+    if (cobertura === 'completa') base *= 1.5;
+    else if (cobertura === 'premium') base *= 2;
+    
+    const valorMensal = Math.max(base / 12, 90); // Mínimo de R$ 90
+    
+    // Exibir resultado
+    document.getElementById('valor-cotacao-residencia').textContent = valorMensal.toFixed(2);
+    document.getElementById('detalhe-tipo-imovel').textContent = 
+      tipoImovel === 'casa' ? 'Casa' : 
+      tipoImovel === 'apartamento' ? 'Apartamento' : 
+      tipoImovel === 'sobrado' ? 'Sobrado' : 'Kitnet';
+    document.getElementById('detalhe-area').textContent = areaImovel;
+    document.getElementById('detalhe-cobertura-residencia').textContent = 
+      cobertura === 'basica' ? 'Cobertura Básica' : 
+      cobertura === 'completa' ? 'Cobertura Completa' : 'Cobertura Premium';
+    
+    document.getElementById('resultado-residencial').style.display = 'block';
+  });
+  
+  // Simulação de cotação - Vida
+  document.getElementById('cotacao-vida').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const idadeSegurado = parseInt(document.getElementById('idade-segurado').value);
+    const valorSeguro = parseFloat(document.getElementById('valor-seguro').value);
+    const profissao = document.getElementById('profissao').value;
+    const periodo = parseInt(document.getElementById('periodo').value);
+    const cobertura = document.getElementById('cobertura-vida').value;
+    
+    // Cálculo simplificado do valor do seguro
+    let base = valorSeguro * 0.0005; // 0.05% do valor segurado
+    
+    // Ajustes por idade
+    if (idadeSegurado < 30) base *= 0.8;
+    else if (idadeSegurado > 50) base *= 1.5;
+    else if (idadeSegurado > 60) base *= 2;
+    
+    // Ajustes por profissão
+    if (profissao === 'construcao') base *= 1.3;
+    else if (profissao === 'transporte') base *= 1.2;
+    else if (profissao === 'administrativo') base *= 0.9;
+    
+    // Ajustes por período
+    if (periodo > 20) base *= 1.2;
+    
+    // Ajustes por tipo de cobertura
+    if (cobertura === 'completa') base *= 1.5;
+    else if (cobertura === 'premium') base *= 2;
+    
+    const valorMensal = Math.max(base / 12, 50); // Mínimo de R$ 50
+    
+    // Exibir resultado
+    document.getElementById('valor-cotacao-vida').textContent = valorMensal.toFixed(2);
+    document.getElementById('detalhe-idade').textContent = idadeSegurado;
+    document.getElementById('detalhe-valor-seguro').textContent = valorSeguro.toLocaleString('pt-BR');
+    document.getElementById('detalhe-cobertura-vida').textContent = 
+      cobertura === 'basica' ? 'Cobertura Básica' : 
+      cobertura === 'completa' ? 'Cobertura Completa' : 'Cobertura Premium';
+    
+    document.getElementById('resultado-vida').style.display = 'block';
+  });
+});
+
+// ===== AUTENTICAÇÃO EM DOIS FATORES OTIMIZADA =====
+let twoFactorCode = '';
+let twoFactorTimer;
+let resendTimer;
+let currentUser = null;
+
+// Gerar código de 6 dígitos
+function generateTwoFactorCode() {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
+// Iniciar timer para o código (3 minutos agora)
+function startCodeTimer() {
+  let timeLeft = 180; // 3 minutos em segundos
+  const timerElement = document.getElementById('timer');
+  
+  clearInterval(twoFactorTimer);
+  timerElement.style.color = '#666';
+  
+  twoFactorTimer = setInterval(() => {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    
+    timerElement.textContent = `Código válido por: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    
+    if (timeLeft <= 30) {
+      timerElement.style.color = 'orange';
+    }
+    
+    if (timeLeft <= 0) {
+      clearInterval(twoFactorTimer);
+      timerElement.textContent = 'Código expirado';
+      timerElement.style.color = 'red';
+    }
+    
+    timeLeft--;
+  }, 1000);
+}
+
+// Iniciar timer para reenvio (30 segundos agora)
+function startResendTimer() {
+  let timeLeft = 30; // 30 segundos
+  const resendBtn = document.getElementById('resendCodeBtn');
+  
+  resendBtn.disabled = true;
+  clearInterval(resendTimer);
+  
+  resendTimer = setInterval(() => {
+    resendBtn.textContent = `Reenviar código (${timeLeft}s)`;
+    
+    if (timeLeft <= 0) {
+      clearInterval(resendTimer);
+      resendBtn.disabled = false;
+      resendBtn.textContent = 'Reenviar código';
+    }
+    
+    timeLeft--;
+  }, 1000);
+}
+
+// Enviar código por email (simulado)
+function sendTwoFactorCode(email) {
+  twoFactorCode = generateTwoFactorCode();
+  
+  // Mostrar o código na tela para facilitar testes
+  document.getElementById('codeDisplay').textContent = twoFactorCode;
+  
+  console.log(`Código 2FA enviado para ${email}: ${twoFactorCode}`);
+  
+  startCodeTimer();
+  startResendTimer();
+  
+  // Auto-preenchimento para facilitar testes
+  setTimeout(() => {
+    autoFillCode();
+  }, 500);
+}
+
+// Auto-preenchimento do código (apenas para desenvolvimento)
+function autoFillCode() {
+  const codeInputs = document.querySelectorAll('.code-input');
+  for (let i = 0; i < twoFactorCode.length; i++) {
+    codeInputs[i].value = twoFactorCode[i];
+  }
+}
+
+// Configurar inputs do código
+function setupCodeInputs() {
+  const codeInputs = document.querySelectorAll('.code-input');
+  
+  codeInputs.forEach(input => {
+    input.addEventListener('input', (e) => {
+      const value = e.target.value;
+      const index = parseInt(e.target.dataset.index);
+      
+      // Permitir apenas números
+      if (!/^\d*$/.test(value)) {
+        e.target.value = '';
+        return;
+      }
+      
+      // Mover para o próximo input
+      if (value && index < 5) {
+        codeInputs[index + 1].focus();
+      }
+      
+      // Verificar automaticamente quando todos os campos estiverem preenchidos
+      if (index === 5 && value) {
+        const allFilled = Array.from(codeInputs).every(input => input.value);
+        if (allFilled) {
+          setTimeout(() => {
+            verifyTwoFactorCode();
+          }, 300);
+        }
+      }
+    });
+    
+    input.addEventListener('keydown', (e) => {
+      const index = parseInt(e.target.dataset.index);
+      
+      // Voltar para o input anterior ao pressionar Backspace
+      if (e.key === 'Backspace' && !e.target.value && index > 0) {
+        codeInputs[index - 1].focus();
+      }
+    });
+    
+    // Permitir colar código completo
+    input.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const pastedData = e.clipboardData.getData('text');
+      if (/^\d{6}$/.test(pastedData)) {
+        for (let i = 0; i < 6; i++) {
+          codeInputs[i].value = pastedData[i];
+        }
+        codeInputs[5].focus();
+      }
+    });
+  });
+}
+
+// Verificar código digitado
+function verifyTwoFactorCode() {
+  const codeInputs = document.querySelectorAll('.code-input');
+  const verifyLoading = document.getElementById('verifyLoading');
+  let enteredCode = '';
+  
+  codeInputs.forEach(input => {
+    enteredCode += input.value;
+  });
+  
+  if (enteredCode.length !== 6) {
+    alert('Por favor, preencha todos os dígitos do código.');
+    return false;
+  }
+  
+  // Mostrar loading
+  verifyLoading.style.display = 'block';
+  
+  // Simular verificação rápida
+  setTimeout(() => {
+    verifyLoading.style.display = 'none';
+    
+    if (enteredCode === twoFactorCode) {
+      clearInterval(twoFactorTimer);
+      clearInterval(resendTimer);
+      
+      // Login bem-sucedido
+      localStorage.setItem('mainlock:logged', JSON.stringify(currentUser));
+      
+      // Feedback visual
+      document.getElementById('verifyCodeBtn').textContent = '✓ Login realizado!';
+      document.getElementById('verifyCodeBtn').style.background = '#27ae60';
+      
+      setTimeout(() => {
+        alert('Login realizado com sucesso!');
+        window.location.href = 'clientes.html';
+      }, 500);
+      
+      return true;
+    } else {
+      // Feedback visual de erro
+      codeInputs.forEach(input => {
+        input.style.borderColor = 'red';
+        input.style.background = '#ffe6e6';
+      });
+      
+      setTimeout(() => {
+        codeInputs.forEach(input => {
+          input.style.borderColor = '#ddd';
+          input.style.background = '#f9f9f9';
+        });
+      }, 1000);
+      
+      alert('Código inválido. Tente novamente.');
+      return false;
+    }
+  }, 800);
+}
+
+// ===== LOGIN / CADASTRO OTIMIZADO =====
+document.addEventListener('DOMContentLoaded',()=>{
+  const loginSection=document.getElementById('loginSection');
+  const registerSection=document.getElementById('registerSection');
+  const loginForm=document.getElementById('loginForm');
+  const twoFactorSection=document.getElementById('twoFactorSection');
+  const registerForm=document.getElementById('registerForm');
+  const registerLink=document.getElementById('registerLink');
+  const registerMessage=document.getElementById('registerMessage');
+  const cancelRegister=document.getElementById('cancelRegister');
+  const verifyCodeBtn=document.getElementById('verifyCodeBtn');
+  const resendCodeBtn=document.getElementById('resendCodeBtn');
+  const quickLoginBtn=document.getElementById('quickLoginBtn');
+  const loginLoading = document.getElementById('loginLoading');
+
+  loginSection.style.display='block';
+  registerSection.style.display='none';
+  twoFactorSection.style.display='none';
+  registerMessage.style.display='none';
+  registerMessage.textContent='';
+
+  // Configurar inputs do código 2FA
+  setupCodeInputs();
+
+  // LOGIN RÁPIDO (apenas para desenvolvimento)
+  quickLoginBtn.addEventListener('click', () => {
+    document.getElementById('loginEmail').value = 'desenvolvedor@mainlock.com';
+    document.getElementById('loginPassword').value = 'admin123';
+    loginForm.dispatchEvent(new Event('submit'));
+  });
+
+  // LOGIN FUNCIONAL (SIMULADO COM LOCALSTORAGE)
+  loginForm.addEventListener('submit', e=>{
+    e.preventDefault();
+    const email=document.getElementById('loginEmail').value;
+    const senha=document.getElementById('loginPassword').value;
+    
+    // Mostrar loading
+    loginLoading.style.display = 'block';
+    document.getElementById('loginBtn').disabled = true;
+    
+    // Simular verificação rápida
+    setTimeout(() => {
+      loginLoading.style.display = 'none';
+      document.getElementById('loginBtn').disabled = false;
+      
+      let users=JSON.parse(localStorage.getItem('mainlock:users')||'[]');
+      const user=users.find(u=>u.email===email && u.password===senha);
+      
+      if(user || (email === 'desenvolvedor@mainlock.com' && senha === 'admin123')){
+        // Salvar usuário atual
+        currentUser = user || { 
+          name: 'Desenvolvedor Mainlock', 
+          email: 'desenvolvedor@mainlock.com',
+          password: 'admin123'
+        };
+        
+        // Mostrar seção de autenticação em dois fatores
+        loginForm.style.display = 'none';
+        twoFactorSection.style.display = 'block';
+        
+        // Enviar código 2FA
+        sendTwoFactorCode(email);
+      } else{
+        alert('Email ou senha incorretos');
+      }
+    }, 800);
+  });
+
+  // Verificar código 2FA
+  verifyCodeBtn.addEventListener('click', verifyTwoFactorCode);
+
+  // Reenviar código 2FA
+  resendCodeBtn.addEventListener('click', () => {
+    if (currentUser) {
+      sendTwoFactorCode(currentUser.email);
+      alert('Novo código enviado para seu email.');
+    }
+  });
+
+  // Mostrar registro
+  registerLink.addEventListener('click', e=>{
+    e.preventDefault();
+    loginSection.style.display='none';
+    registerSection.style.display='block';
+    registerMessage.style.display='none';
+    registerMessage.textContent='';
+  });
+
+  // Cancelar registro
+  cancelRegister.addEventListener('click',()=>{
+    registerSection.style.display='none';
+    loginSection.style.display='block';
+    registerForm.reset();
+    registerMessage.style.display='none';
+    registerMessage.textContent='';
+  });
+
+  // Cadastro com validação completa
+  registerForm.addEventListener('submit', e=>{
+    e.preventDefault();
+    const previousErrors=registerForm.querySelectorAll('.error-message');
+    previousErrors.forEach(err=>err.remove());
+
+    let hasError=false;
+    const requiredFields=registerForm.querySelectorAll('input[required], select[required]');
+    requiredFields.forEach(field=>{
+      if(!field.value.trim()){
+        hasError=true;
+        const error=document.createElement('span');
+        error.classList.add('error-message');
+        error.textContent='*Campo obrigatório';
+        field.insertAdjacentElement('afterend',error);
+      }
+    });
+
+    const passwordEl=document.getElementById('password');
+    const confirmEl=document.getElementById('confirmPassword');
+    if(passwordEl.value && confirmEl.value && passwordEl.value!==confirmEl.value){
+      hasError=true;
+      const error=document.createElement('span');
+      error.classList.add('error-message');
+      error.textContent='*As senhas não coincidem';
+      confirmEl.insertAdjacentElement('afterend',error);
+    }
+
+    if(hasError) return;
+
+    // Salvar usuário no localStorage
+    const newUser={
+      name: registerForm.querySelector('input[type=text]').value,
+      email: registerForm.querySelector('input[type=email]').value,
+      password: passwordEl.value
+    };
+    let users=JSON.parse(localStorage.getItem('mainlock:users')||'[]');
+    users.push(newUser);
+    localStorage.setItem('mainlock:users',JSON.stringify(users));
+
+    registerMessage.style.color='green';
+    registerMessage.style.display='block';
+    registerMessage.textContent='Conta criada com sucesso!';
+    registerForm.reset();
+
+    setTimeout(()=>{
+      registerSection.style.display='none';
+      loginSection.style.display='block';
+      registerMessage.style.display='none';
+    },2000);
+  });
+});
+</script>
+</body>
+</html>

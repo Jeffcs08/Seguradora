@@ -1,0 +1,3397 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Área do Cliente - MainLock Seguros </title>
+<style>
+    :root{--nav:#192C3D;--accent:#f4b400;--muted:#6b7a86;--bg:#f4f6f8}
+    *{box-sizing:border-box;font-family:Inter, 'Segoe UI', Roboto, sans-serif}
+    body{margin:0;background:var(--bg);color:#203040}
+    header{background:var(--nav);color:var(--accent);padding:18px 24px;display:flex;align-items:center;justify-content:space-between}
+    header h1{font-size:1.1rem;margin:0}
+    
+    /* ESTILOS DO MENU DE NAVEGAÇÃO */
+    .nav-menu {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    
+    .nav-btn {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+    }
+    
+    .nav-btn:hover {
+      background: var(--accent);
+      color: var(--nav);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    .clock-container {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    
+    .wrap{max-width:1200px;margin:22px auto;padding:0 16px}
+    .grid{display:grid;grid-template-columns:320px 1fr 360px;gap:18px}
+    /* left column */
+    .card{background:#fff;border-radius:10px;padding:16px;box-shadow:0 6px 18px rgba(18,24,34,0.06)}
+    .profile{display:flex;gap:12px;align-items:center}
+    .avatar{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--nav),#0f2940);display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:700;position:relative;overflow:hidden;cursor:pointer}
+    .avatar img{width:100%;height:100%;object-fit:cover;border-radius:12px}
+    .avatar-edit{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.7);color:white;font-size:0.7rem;text-align:center;padding:2px;opacity:0;transition:opacity 0.3s}
+    .avatar:hover .avatar-edit{opacity:1}
+    .small{font-size:0.85rem;color:var(--muted)}
+    .muted{color:var(--muted)}
+    .section-title{font-weight:700;color:var(--nav);margin-bottom:10px}
+    /* invoices */
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px 8px;text-align:left;font-size:0.9rem}
+    th{background:#0f2430;color:var(--accent);font-weight:600}
+    tr:nth-child(even) td{background:#fcfdff}
+    .status-paid{color:green;font-weight:700}
+    .status-due{color:#d97706;font-weight:700}
+    .status-over{color:#c53030;font-weight:700}
+    .btn{background:var(--nav);color:var(--accent);border:none;padding:8px 10px;border-radius:8px;cursor:pointer;transition:all 0.3s}
+    .btn:hover{transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,0.2)}
+    .btn.secondary{background:#efefef;color:#222}
+    .btn.success{background:#27ae60;color:white}
+    .btn.warning{background:#e67e22;color:white}
+    .btn.danger{background:#c53030;color:white}
+    .actions{display:flex;gap:8px;flex-wrap:wrap}
+    /* chat */
+    .chat-window{display:flex;flex-direction:column;height:480px}
+    .messages{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
+    .msg{max-width:78%;padding:10px;border-radius:10px}
+    .me{align-self:flex-end;background:#192C3D;color:var(--accent)}
+    .rep{align-self:flex-start;background:#e9f0f6;color:#103243}
+    .chat-input{display:flex;gap:8px;padding:10px;border-top:1px solid #eee}
+    input[type="text"], textarea{flex:1;padding:10px;border-radius:8px;border:1px solid #ddd}
+    /* notifications */
+    .notif-list{display:flex;flex-direction:column;gap:8px}
+    .notif{padding:10px;border-radius:8px;background:#fff;border-left:4px solid var(--nav)}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#f0f3f5;font-weight:600}
+    /* sinistros */
+    .sin-list{display:flex;flex-direction:column;gap:10px}
+    .sin-item{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:10px;border-radius:8px;background:#fff}
+    /* coverages */
+    .cover-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .coverage{padding:10px;border-radius:8px;background:#fff;display:flex;justify-content:space-between;align-items:center}
+    label.switch{position:relative;display:inline-block;width:46px;height:26px}
+    label.switch input{display:none}
+    .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#ddd;border-radius:26px}
+    .slider:before{content:"";position:absolute;height:20px;width:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:0.2s}
+    input:checked + .slider{background:var(--nav)}
+    input:checked + .slider:before{transform:translateX(20px)}
+    /* modal apólice simples */
+    .modal-bg{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:1000}
+    .modal{background:#fff;padding:20px;border-radius:12px;max-width:700px;width:90%;box-shadow:0 8px 24px rgba(0,0,0,0.2);position:relative}
+    .modal img{width:100%;border-radius:8px}
+    .close-btn{position:absolute;top:10px;right:14px;background:#192C3D;color:#fff;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer}
+    /* CPF visível */
+    .cpf-display{background:#f8f9fa;padding:8px 12px;border-radius:6px;border:1px solid #e9ecef;font-family:monospace;font-weight:600;color:#192C3D;margin:8px 0}
+    /* Foto de perfil */
+    .photo-upload-btn{background:#27ae60;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:0.8rem;margin-top:8px}
+    .photo-upload-btn:hover{background:#219653}
+    /* Status badges */
+    .status-badge{display:inline-block;padding:4px 8px;border-radius:4px;font-size:0.8rem;font-weight:600}
+    .status-active{background:#d4edda;color:#155724}
+    .status-cancelled{background:#f8d7da;color:#721c24}
+    .status-renewed{background:#cce7ff;color:#004085}
+    .status-expired{background:#fff3cd;color:#856404}
+    /* Fotos de sinistro */
+    .photo-gallery{display:grid;grid-template-columns:repeat(auto-fill, minmax(100px, 1fr));gap:8px;margin-top:10px}
+    .photo-thumbnail{width:100%;height:80px;object-fit:cover;border-radius:6px;cursor:pointer;border:2px solid #e9ecef}
+    .photo-thumbnail:hover{border-color:var(--accent)}
+    .upload-area{border:2px dashed #ddd;border-radius:8px;padding:20px;text-align:center;cursor:pointer;margin:10px 0}
+    .upload-area:hover{border-color:var(--accent)}
+    .upload-area.dragover{border-color:var(--nav);background:#f8f9fa}
+    .photo-preview{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+    .photo-preview-item{position:relative;width:80px;height:80px}
+    .photo-preview-item img{width:100%;height:100%;object-fit:cover;border-radius:6px}
+    .remove-photo{position:absolute;top:-5px;right:-5px;background:#c53030;color:white;border:none;border-radius:50%;width:20px;height:20px;font-size:12px;cursor:pointer}
+    @media(max-width:1000px){.grid{grid-template-columns:1fr;}.chat-window{height:360px}.wrap{padding:8px}}
+    
+    /* Responsividade para o menu */
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        gap: 12px;
+        padding: 12px 16px;
+      }
+      
+      .nav-menu {
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      .nav-btn {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+      }
+      
+      .clock-container {
+        margin-top: 8px;
+      }
+    }
+  </style>
+<style>
+/* ADICIONE ESTES ESTILOS AO CSS EXISTENTE */
+.geolocation-panel {
+    background: #fff;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 18px;
+    box-shadow: 0 6px 18px rgba(18,24,34,0.06);
+}
+
+.location-status {
+    padding: 10px;
+    border-radius: 8px;
+    margin: 10px 0;
+    text-align: center;
+    font-weight: 600;
+}
+
+.location-active {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.location-inactive {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.location-coords {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 6px;
+    font-family: monospace;
+    margin: 8px 0;
+    border: 1px solid #e9ecef;
+    text-align: center;
+}
+
+.location-btn {
+    background: #192C3D;
+    color: #f4b400;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin: 4px;
+    font-size: 0.9rem;
+    width: 100%;
+}
+
+.location-btn:hover {
+    background: #0f2430;
+}
+
+.location-btn.success {
+    background: #27ae60;
+    color: white;
+}
+
+.location-btn.danger {
+    background: #c53030;
+    color: white;
+}
+
+.location-btn:disabled {
+    background: #95a5a6;
+    cursor: not-allowed;
+}
+
+.location-history {
+    max-height: 120px;
+    overflow-y: auto;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 8px;
+    margin-top: 10px;
+}
+
+.location-item {
+    padding: 4px 6px;
+    border-bottom: 1px solid #f1f2f6;
+    font-size: 0.75rem;
+}
+
+.location-item:last-child {
+    border-bottom: none;
+}
+
+.location-loading {
+    text-align: center;
+    color: #6b7a86;
+    padding: 10px;
+}
+
+.location-error {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 8px;
+    border-radius: 6px;
+    margin: 8px 0;
+    font-size: 0.8rem;
+}
+/* ADICIONE ESTES ESTILOS AO CSS EXISTENTE */
+.geolocation-panel {
+    background: #fff;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 18px;
+    box-shadow: 0 6px 18px rgba(18,24,34,0.06);
+}
+
+.location-status {
+    padding: 10px;
+    border-radius: 8px;
+    margin: 10px 0;
+    text-align: center;
+    font-weight: 600;
+}
+
+.location-active {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.location-inactive {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.location-coords {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 6px;
+    font-family: monospace;
+    margin: 8px 0;
+    border: 1px solid #e9ecef;
+    text-align: center;
+}
+
+.location-btn {
+    background: #192C3D;
+    color: #f4b400;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin: 4px;
+    font-size: 0.9rem;
+    width: 100%;
+}
+
+.location-btn:hover {
+    background: #0f2430;
+}
+
+.location-btn.success {
+    background: #27ae60;
+    color: white;
+}
+
+.location-btn.danger {
+    background: #c53030;
+    color: white;
+}
+
+.location-btn:disabled {
+    background: #95a5a6;
+    cursor: not-allowed;
+}
+
+.location-history {
+    max-height: 120px;
+    overflow-y: auto;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 8px;
+    margin-top: 10px;
+}
+
+.location-item {
+    padding: 4px 6px;
+    border-bottom: 1px solid #f1f2f6;
+    font-size: 0.75rem;
+}
+
+.location-item:last-child {
+    border-bottom: none;
+}
+
+.location-loading {
+    text-align: center;
+    color: #6b7a86;
+    padding: 10px;
+}
+
+.location-error {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 8px;
+    border-radius: 6px;
+    margin: 8px 0;
+    font-size: 0.8rem;
+}
+</style>
+
+<style>
+  
+  :root{--nav:#192C3D;--accent:#f4b400;--muted:#6b7a86;--bg:#f4f6f8}
+  *{box-sizing:border-box;font-family:Inter, 'Segoe UI', Roboto, sans-serif}
+  body{margin:0;background:var(--bg);color:#203040}
+  header{background:var(--nav);color:var(--accent);padding:18px 24px;display:flex;align-items:center;justify-content:space-between}
+  header h1{font-size:1.1rem;margin:0}
+  .wrap{max-width:1200px;margin:22px auto;padding:0 16px}
+  .grid{display:grid;grid-template-columns:320px 1fr 360px;gap:18px}
+  /* left column */
+  .card{background:#fff;border-radius:10px;padding:16px;box-shadow:0 6px 18px rgba(18,24,34,0.06)}
+  .profile{display:flex;gap:12px;align-items:center}
+  .avatar{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--nav),#0f2940);display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:700;position:relative;overflow:hidden;cursor:pointer}
+  .avatar img{width:100%;height:100%;object-fit:cover;border-radius:12px}
+  .avatar-edit{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.7);color:white;font-size:0.7rem;text-align:center;padding:2px;opacity:0;transition:opacity 0.3s}
+  .avatar:hover .avatar-edit{opacity:1}
+  .small{font-size:0.85rem;color:var(--muted)}
+  .muted{color:var(--muted)}
+  .section-title{font-weight:700;color:var(--nav);margin-bottom:10px}
+  /* invoices */
+  table{width:100%;border-collapse:collapse}
+  th,td{padding:10px 8px;text-align:left;font-size:0.9rem}
+  th{background:#0f2430;color:var(--accent);font-weight:600}
+  tr:nth-child(even) td{background:#fcfdff}
+  .status-paid{color:green;font-weight:700}
+  .status-due{color:#d97706;font-weight:700}
+  .status-over{color:#c53030;font-weight:700}
+  .btn{background:var(--nav);color:var(--accent);border:none;padding:8px 10px;border-radius:8px;cursor:pointer;transition:all 0.3s}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,0.2)}
+  .btn.secondary{background:#efefef;color:#222}
+  .btn.success{background:#27ae60;color:white}
+  .btn.warning{background:#e67e22;color:white}
+  .btn.danger{background:#c53030;color:white}
+  .actions{display:flex;gap:8px;flex-wrap:wrap}
+  /* chat */
+  .chat-window{display:flex;flex-direction:column;height:480px}
+  .messages{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
+  .msg{max-width:78%;padding:10px;border-radius:10px}
+  .me{align-self:flex-end;background:#192C3D;color:var(--accent)}
+  .rep{align-self:flex-start;background:#e9f0f6;color:#103243}
+  .chat-input{display:flex;gap:8px;padding:10px;border-top:1px solid #eee}
+  input[type="text"], textarea{flex:1;padding:10px;border-radius:8px;border:1px solid #ddd}
+  /* notifications */
+  .notif-list{display:flex;flex-direction:column;gap:8px}
+  .notif{padding:10px;border-radius:8px;background:#fff;border-left:4px solid var(--nav)}
+  .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#f0f3f5;font-weight:600}
+  /* sinistros */
+  .sin-list{display:flex;flex-direction:column;gap:10px}
+  .sin-item{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:10px;border-radius:8px;background:#fff}
+  /* coverages */
+  .cover-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .coverage{padding:10px;border-radius:8px;background:#fff;display:flex;justify-content:space-between;align-items:center}
+  label.switch{position:relative;display:inline-block;width:46px;height:26px}
+  label.switch input{display:none}
+  .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#ddd;border-radius:26px}
+  .slider:before{content:"";position:absolute;height:20px;width:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:0.2s}
+  input:checked + .slider{background:var(--nav)}
+  input:checked + .slider:before{transform:translateX(20px)}
+  /* modal apólice simples */
+  .modal-bg{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:1000}
+  .modal{background:#fff;padding:20px;border-radius:12px;max-width:700px;width:90%;box-shadow:0 8px 24px rgba(0,0,0,0.2);position:relative}
+  .modal img{width:100%;border-radius:8px}
+  .close-btn{position:absolute;top:10px;right:14px;background:#192C3D;color:#fff;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer}
+  /* CPF visível */
+  .cpf-display{background:#f8f9fa;padding:8px 12px;border-radius:6px;border:1px solid #e9ecef;font-family:monospace;font-weight:600;color:#192C3D;margin:8px 0}
+  /* Foto de perfil */
+  .photo-upload-btn{background:#27ae60;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:0.8rem;margin-top:8px}
+  .photo-upload-btn:hover{background:#219653}
+  /* Status badges */
+  .status-badge{display:inline-block;padding:4px 8px;border-radius:4px;font-size:0.8rem;font-weight:600}
+  .status-active{background:#d4edda;color:#155724}
+  .status-cancelled{background:#f8d7da;color:#721c24}
+  .status-renewed{background:#cce7ff;color:#004085}
+  .status-expired{background:#fff3cd;color:#856404}
+  /* Fotos de sinistro */
+  .photo-gallery{display:grid;grid-template-columns:repeat(auto-fill, minmax(100px, 1fr));gap:8px;margin-top:10px}
+  .photo-thumbnail{width:100%;height:80px;object-fit:cover;border-radius:6px;cursor:pointer;border:2px solid #e9ecef}
+  .photo-thumbnail:hover{border-color:var(--accent)}
+  .upload-area{border:2px dashed #ddd;border-radius:8px;padding:20px;text-align:center;cursor:pointer;margin:10px 0}
+  .upload-area:hover{border-color:var(--accent)}
+  .upload-area.dragover{border-color:var(--nav);background:#f8f9fa}
+  .photo-preview{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+  .photo-preview-item{position:relative;width:80px;height:80px}
+  .photo-preview-item img{width:100%;height:100%;object-fit:cover;border-radius:6px}
+  .remove-photo{position:absolute;top:-5px;right:-5px;background:#c53030;color:white;border:none;border-radius:50%;width:20px;height:20px;font-size:12px;cursor:pointer}
+  @media(max-width:1000px){.grid{grid-template-columns:1fr;}.chat-window{height:360px}.wrap{padding:8px}}
+</style>
+
+<script>
+    // ---------------------- Funções de Pagamento Corrigidas ----------------------
+function downloadBoleto(invoiceId) {
+    const invoice = DATA.invoices.find(inv => inv.id === invoiceId);
+    if (!invoice) {
+        alert('Fatura não encontrada!');
+        return;
+    }
+    
+    // Simular download do boleto
+    const boletoData = `
+BOLETO BANCÁRIO - MAINLOCK SEGUROS
+-----------------------------------
+Beneficiário: MainLock Seguros Ltda
+CNPJ: 12.345.678/0001-90
+
+Favorecido: ${DATA.client.name}
+CPF: ${DATA.client.cpf || 'Não informado'}
+
+Apólice: ${invoice.policy}
+Vencimento: ${fmtDate(invoice.due)}
+Valor: ${money(invoice.amount)}
+
+Código de Barras: 34191.11111 22222.333333 44444.555555 6 78900000001234
+Linha Digitável: 34191.11111 22222.333333 44444.555555 6 78900000001234
+
+Instruções:
+- Pagável em qualquer banco até o vencimento
+- Após o vencimento, pagar apenas na MainLock Seguros
+    `;
+    
+    const blob = new Blob([boletoData], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `boleto_${invoice.policy}_${invoice.id}.txt`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    
+    alert(`Boleto da fatura ${invoice.id} gerado com sucesso!\n\nApólice: ${invoice.policy}\nValor: ${money(invoice.amount)}\nVencimento: ${fmtDate(invoice.due)}`);
+    
+    logActivity(`Boleto gerado: ${invoice.policy} - ${money(invoice.amount)}`);
+}
+// ---------------------- Função para Cancelar Fatura ----------------------
+function cancelInvoice(invoiceId) {
+    const invoice = DATA.invoices.find(inv => inv.id === invoiceId);
+    if (!invoice) {
+        alert('Fatura não encontrada!');
+        return;
+    }
+    
+    // Verificar se a fatura já está paga
+    if (invoice.status === 'paid') {
+        alert('Não é possível cancelar uma fatura já paga!');
+        return;
+    }
+    
+    // Verificar se a fatura já está cancelada
+    if (invoice.status === 'cancelled') {
+        alert('Esta fatura já está cancelada!');
+        return;
+    }
+    
+    // Mostrar detalhes da fatura antes do cancelamento
+    const invoiceDetails = `
+DETALHES DA FATURA PARA CANCELAMENTO:
+
+ID: ${invoice.id}
+Apólice: ${invoice.policy}
+Vencimento: ${fmtDate(invoice.due)}
+Valor: ${money(invoice.amount)}
+Status: ${invoice.status.toUpperCase()}
+
+⚠️  ATENÇÃO: Esta ação é IRREVERSÍVEL!
+    `.trim();
+
+    alert(invoiceDetails);
+
+    const confirmation1 = confirm(`⚠️  CONFIRMAÇÃO 1/2\n\nDeseja realmente CANCELAR esta fatura?\n\nApólice: ${invoice.policy}\nValor: ${money(invoice.amount)}`);
+    if (!confirmation1) {
+        alert('Cancelamento da fatura cancelado.');
+        return;
+    }
+
+    const reason = prompt('Por favor, informe o motivo do cancelamento:');
+    if (reason === null) {
+        alert('Cancelamento da fatura cancelado.');
+        return;
+    }
+    
+    if (!reason || reason.trim() === '') {
+        alert('É necessário informar um motivo para o cancelamento!');
+        return;
+    }
+
+    const confirmation2 = confirm(`⚠️  CONFIRMAÇÃO 2/2\n\nÚLTIMO AVISO:\n\nFatura ID: ${invoice.id}\nApólice: ${invoice.policy}\nValor: ${money(invoice.amount)}\nMotivo: ${reason}\n\nConfirmar cancelamento?`);
+    if (!confirmation2) {
+        alert('Cancelamento da fatura cancelado.');
+        return;
+    }
+
+    // Realizar o cancelamento
+    invoice.status = 'cancelled';
+    invoice.cancellationReason = reason;
+    invoice.cancelledAt = new Date().toISOString();
+    
+    save();
+    
+    // Adicionar notificação
+    DATA.notifications.push({
+        id: Date.now(),
+        title: `Fatura cancelada - ${invoice.policy} - ${money(invoice.amount)}`,
+        date: new Date().toISOString(),
+        read: false
+    });
+    
+    logActivity(`Fatura cancelada: ${invoice.policy} - ${money(invoice.amount)} - Motivo: ${reason}`);
+    renderAll();
+    
+    alert(`✅ Fatura #${invoice.id} cancelada com sucesso!\n\nDetalhes:\n- Apólice: ${invoice.policy}\n- Valor: ${money(invoice.amount)}\n- Motivo: ${reason}\n- Data: ${new Date().toLocaleString('pt-BR')}`);
+}
+
+// ---------------------- Função Atualizada para Renderizar Faturas ----------------------
+function updateInvoicesTable() {
+    const tbody = document.querySelector('#invoicesTable tbody'); 
+    tbody.innerHTML='';
+    
+    DATA.invoices.forEach(inv => {
+        let statusClass = '';
+        let statusText = '';
+        
+        switch(inv.status) {
+            case 'paid':
+                statusClass = 'status-paid';
+                statusText = 'PAGA';
+                break;
+            case 'due':
+                statusClass = 'status-due';
+                statusText = 'EM ABERTO';
+                break;
+            case 'overdue':
+                statusClass = 'status-over';
+                statusText = 'VENCIDA';
+                break;
+            case 'cancelled':
+                statusClass = 'status-cancelled';
+                statusText = 'CANCELADA';
+                break;
+            default:
+                statusClass = 'status-due';
+                statusText = inv.status.toUpperCase();
+        }
+        
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${inv.policy}</td>
+            <td>${fmtDate(inv.due)}</td>
+            <td class='${statusClass}'>${statusText}</td>
+            <td>${money(invoice.amount)}</td>
+            <td class='actions'>
+                ${inv.status !== 'cancelled' && inv.status !== 'paid' ? `
+                    <button class='btn secondary' onclick='downloadBoleto(${inv.id})'>Boleto</button>
+                    <button class='btn' onclick='payInvoice(${inv.id},"card")'>Pagar (Cartão)</button>
+                    <button class='btn' onclick='payInvoice(${inv.id},"pix")'>Pagar (PIX)</button>
+                    <button class='btn danger' onclick='cancelInvoice(${inv.id})'>Cancelar</button>
+                ` : `
+                    <span class='small muted'>${inv.status === 'paid' ? 'Fatura paga' : 'Fatura cancelada'}</span>
+                `}
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+function payInvoice(invoiceId, method) {
+    const invoice = DATA.invoices.find(inv => inv.id === invoiceId);
+    if (!invoice) {
+        alert('Fatura não encontrada!');
+        return;
+    }
+    
+    if (invoice.status === 'paid') {
+        alert('Esta fatura já está paga!');
+        return;
+    }
+    
+    let paymentMessage = '';
+    let paymentDetails = '';
+    
+    switch(method) {
+        case 'card':
+            paymentMessage = `Pagamento com Cartão - Fatura ${invoice.id}`;
+            paymentDetails = `
+💳 PAGAMENTO COM CARTÃO
+
+Apólice: ${invoice.policy}
+Valor: ${money(invoice.amount)}
+Vencimento: ${fmtDate(invoice.due)}
+
+Cliente: ${DATA.client.name}
+CPF: ${DATA.client.cpf || 'Não informado'}
+
+Status: Processando pagamento...
+            `;
+            break;
+            
+        case 'pix':
+            // Gerar PIX copia e cola
+            const pixCode = generatePixCode(invoice);
+            paymentMessage = `Pagamento via PIX - Fatura ${invoice.id}`;
+            paymentDetails = `
+📱 PAGAMENTO VIA PIX
+
+Apólice: ${invoice.policy}
+Valor: ${money(invoice.amount)}
+Vencimento: ${fmtDate(invoice.due)}
+
+Cliente: ${DATA.client.name}
+CPF: ${DATA.client.cpf || 'Não informado'}
+
+Código PIX (Copie e Cole):
+${pixCode}
+
+⚠️  Este PIX é válido por 1 hora
+            `;
+            break;
+            
+        default:
+            alert('Método de pagamento inválido!');
+            return;
+    }
+    
+    const confirmPayment = confirm(`${paymentDetails}\n\nConfirmar pagamento?`);
+    
+    if (confirmPayment) {
+        // Simular processamento do pagamento
+        setTimeout(() => {
+            invoice.status = 'paid';
+            save();
+            
+            // Adicionar notificação
+            DATA.notifications.push({
+                id: Date.now(),
+                title: `Pagamento confirmado - ${invoice.policy} - ${money(invoice.amount)}`,
+                date: new Date().toISOString(),
+                read: false
+            });
+            
+            logActivity(`Pagamento realizado: ${invoice.policy} - ${money(invoice.amount)} - ${method.toUpperCase()}`);
+            renderAll();
+            
+            alert(`✅ Pagamento realizado com sucesso!\n\n${invoice.policy}\nValor: ${money(invoice.amount)}\nMétodo: ${method.toUpperCase()}\nData: ${new Date().toLocaleString('pt-BR')}`);
+        }, 2000);
+    }
+}
+// ---------------------- Função para Cancelar Fatura ----------------------
+function cancelInvoice(invoiceId) {
+    const invoice = DATA.invoices.find(inv => inv.id === invoiceId);
+    if (!invoice) {
+        alert('Fatura não encontrada!');
+        return;
+    }
+    
+    // Verificar se a fatura já está paga
+    if (invoice.status === 'paid') {
+        alert('Não é possível cancelar uma fatura já paga!');
+        return;
+    }
+    
+    // Verificar se a fatura já está cancelada
+    if (invoice.status === 'cancelled') {
+        alert('Esta fatura já está cancelada!');
+        return;
+    }
+    
+    // Mostrar detalhes da fatura antes do cancelamento
+    const invoiceDetails = `
+DETALHES DA FATURA PARA CANCELAMENTO:
+
+ID: ${invoice.id}
+Apólice: ${invoice.policy}
+Vencimento: ${fmtDate(invoice.due)}
+Valor: ${money(invoice.amount)}
+Status: ${invoice.status.toUpperCase()}
+
+⚠️  ATENÇÃO: Esta ação é IRREVERSÍVEL!
+    `.trim();
+
+    alert(invoiceDetails);
+
+    const confirmation1 = confirm(`⚠️  CONFIRMAÇÃO 1/2\n\nDeseja realmente CANCELAR esta fatura?\n\nApólice: ${invoice.policy}\nValor: ${money(invoice.amount)}`);
+    if (!confirmation1) {
+        alert('Cancelamento da fatura cancelado.');
+        return;
+    }
+
+    const reason = prompt('Por favor, informe o motivo do cancelamento:');
+    if (reason === null) {
+        alert('Cancelamento da fatura cancelado.');
+        return;
+    }
+    
+    if (!reason || reason.trim() === '') {
+        alert('É necessário informar um motivo para o cancelamento!');
+        return;
+    }
+
+    const confirmation2 = confirm(`⚠️  CONFIRMAÇÃO 2/2\n\nÚLTIMO AVISO:\n\nFatura ID: ${invoice.id}\nApólice: ${invoice.policy}\nValor: ${money(invoice.amount)}\nMotivo: ${reason}\n\nConfirmar cancelamento?`);
+    if (!confirmation2) {
+        alert('Cancelamento da fatura cancelado.');
+        return;
+    }
+
+    // Realizar o cancelamento
+    invoice.status = 'cancelled';
+    invoice.cancellationReason = reason;
+    invoice.cancelledAt = new Date().toISOString();
+    
+    save();
+    
+    // Adicionar notificação
+    DATA.notifications.push({
+        id: Date.now(),
+        title: `Fatura cancelada - ${invoice.policy} - ${money(invoice.amount)}`,
+        date: new Date().toISOString(),
+        read: false
+    });
+    
+    logActivity(`Fatura cancelada: ${invoice.policy} - ${money(invoice.amount)} - Motivo: ${reason}`);
+    renderAll();
+    
+    alert(`✅ Fatura #${invoice.id} cancelada com sucesso!\n\nDetalhes:\n- Apólice: ${invoice.policy}\n- Valor: ${money(invoice.amount)}\n- Motivo: ${reason}\n- Data: ${new Date().toLocaleString('pt-BR')}`);
+}
+
+// ---------------------- Função Atualizada para Renderizar Faturas ----------------------
+function updateInvoicesTable() {
+    const tbody = document.querySelector('#invoicesTable tbody'); 
+    tbody.innerHTML='';
+    
+    DATA.invoices.forEach(inv => {
+        let statusClass = '';
+        let statusText = '';
+        
+        switch(inv.status) {
+            case 'paid':
+                statusClass = 'status-paid';
+                statusText = 'PAGA';
+                break;
+            case 'due':
+                statusClass = 'status-due';
+                statusText = 'EM ABERTO';
+                break;
+            case 'overdue':
+                statusClass = 'status-over';
+                statusText = 'VENCIDA';
+                break;
+            case 'cancelled':
+                statusClass = 'status-cancelled';
+                statusText = 'CANCELADA';
+                break;
+            default:
+                statusClass = 'status-due';
+                statusText = inv.status.toUpperCase();
+        }
+        
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${inv.policy}</td>
+            <td>${fmtDate(inv.due)}</td>
+            <td class='${statusClass}'>${statusText}</td>
+            <td>${money(invoice.amount)}</td>
+            <td class='actions'>
+                ${inv.status !== 'cancelled' && inv.status !== 'paid' ? `
+                    <button class='btn secondary' onclick='downloadBoleto(${inv.id})'>Boleto</button>
+                    <button class='btn' onclick='payInvoice(${inv.id},"card")'>Pagar (Cartão)</button>
+                    <button class='btn' onclick='payInvoice(${inv.id},"pix")'>Pagar (PIX)</button>
+                    <button class='btn danger' onclick='cancelInvoice(${inv.id})'>Cancelar</button>
+                ` : `
+                    <span class='small muted'>${inv.status === 'paid' ? 'Fatura paga' : 'Fatura cancelada'}</span>
+                `}
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+// Gerar código PIX
+function generatePixCode(invoice) {
+    const randomPayload = Math.random().toString(36).substring(2, 15);
+    return `00020126580014br.gov.bcb.pix0136${randomPayload}520400005303986540${invoice.amount.toFixed(2)}5802BR5913MAINLOCK SEGUROS6008SAO PAULO62290525${invoice.id}${invoice.policy.replace(/\s/g, '')}6304`;
+}
+
+// ---------------------- Adicionar Sinistro de Exemplo ----------------------
+function addSampleClaim() {
+    const sampleClaim = {
+        id: 1001,
+        type: 'Colisão Traseira',
+        date: new Date('2024-10-15T14:30:00').toISOString(),
+        status: 'Em Análise',
+        policy: 'AUTO2024001',
+        notes: 'Colisão traseira no semáforo da Av. Paulista. Veículo traseiro não respeitou distância de segurança. Danos no para-choque traseiro e luzes.',
+        photos: [
+            {
+                id: 1,
+                name: 'danos-traseiros.jpg',
+                type: 'image/jpeg',
+                data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRlMGVmIi8+CiAgPHJlY3QgeD0iMjAiIHk9IjIwIiB3aWR0aD0iMTYwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjYzBjZmU2IiBzdHJva2U9IiM2YjdhODYiIHN0cm9rZS13aWR0aD0iMiIvPgogIDxyZWN0IHg9IjEyMCIgeT0iNDAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgZmlsbD0iI2Y0YjQwMCIgb3BhY2l0eT0iMC43Ii8+CiAgPHRleHQgeD0iMTAwIiB5PSI3MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSIjMzMzIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5EYW5vcyBUcmFzZWlyb3M8L3RleHQ+Cjwvc3ZnPg=='
+            },
+            {
+                id: 2,
+                name: 'luzes-quebradas.jpg',
+                type: 'image/jpeg',
+                data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZmOGVkIi8+CiAgPGNpcmNsZSBjeD0iODAiIGN5PSI2MCIgcj0iMzAiIGZpbGw9IiNmZmQ0YzQiIHN0cm9rZT0iI2Y0YjQwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPGNpcmNsZSBjeD0iMTIwIiBjeT0iNjAiIHI9IjMwIiBmaWxsPSIjZmZkNGM0IiBzdHJva2U9IiNmNGI0MDAiIHN0cm9rZS13aWR0aD0iMiIvPgogIDx0ZXh0IHg9IjEwMCIgeT0iMTMwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiMzMzMiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkx1emVzIFF1ZWJyYWRhczwvdGV4dD4KPC9zdmc+'
+            }
+        ]
+    };
+
+    // Verificar se o sinistro de exemplo já existe
+    const existingClaim = DATA.claims.find(c => c.id === 1001);
+    if (existingClaim) {
+        alert('Sinistro de exemplo já existe no sistema!');
+        return;
+    }
+
+    // Adicionar sinistro ao sistema principal
+    DATA.claims.push(sampleClaim);
+
+    // Adicionar sinistro à apólice correspondente (se existir)
+    const policy = POLICY_DATA.policies.find(p => p.number === 'AUTO2024001');
+    if (policy) {
+        if (!policy.claims) policy.claims = [];
+        
+        const policyClaim = {
+            id: sampleClaim.id,
+            type: sampleClaim.type,
+            date: sampleClaim.date,
+            description: sampleClaim.notes,
+            status: sampleClaim.status,
+            policyNumber: sampleClaim.policy,
+            photos: sampleClaim.photos
+        };
+        
+        policy.claims.push(policyClaim);
+        savePolicies();
+    }
+
+    save();
+    
+    // Adicionar notificação
+    DATA.notifications.push({
+        id: Date.now(),
+        title: 'Sinistro de exemplo adicionado: Colisão Traseira',
+        date: new Date().toISOString(),
+        read: false
+    });
+
+    logActivity('Sinistro de exemplo adicionado: Colisão Traseira');
+    renderAll();
+    
+    alert('✅ Sinistro de exemplo adicionado com sucesso!\n\nDetalhes:\n• Tipo: Colisão Traseira\n• Apólice: AUTO2024001\n• Status: Em Análise\n• 2 fotos anexadas\n\nUse o "Gerenciar Sinistros" para explorar as funcionalidades.');
+}
+
+// ---------------------- Adicionar Botão na Interface ----------------------
+function addSampleClaimButton() {
+    // Encontrar o card de sinistros
+    const claimsCard = document.querySelector('.card .section-title:contains("Sinistros")')?.closest('.card');
+    
+    if (claimsCard && !claimsCard.querySelector('.btn-info')) {
+        const buttonContainer = claimsCard.querySelector('.sin-list')?.nextElementSibling?.nextElementSibling;
+        
+        if (buttonContainer) {
+            const sampleButton = document.createElement('button');
+            sampleButton.className = 'btn info';
+            sampleButton.textContent = 'Adicionar Exemplo';
+            sampleButton.onclick = addSampleClaim;
+            sampleButton.style.marginLeft = '8px';
+            sampleButton.title = 'Adicionar um sinistro de exemplo para testar as funcionalidades';
+            
+            buttonContainer.appendChild(sampleButton);
+        }
+    }
+}
+
+// ---------------------- Atualizar o CSS para o Botão Info ----------------------
+const style = document.createElement('style');
+style.textContent = `
+.btn.info { 
+    background: #3498db; 
+    color: white; 
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+.btn.info:hover { 
+    background: #2980b9; 
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+`;
+document.head.appendChild(style);
+
+
+// ---------------------- Adicionar Sinistro de Exemplo Automaticamente (Opcional) ----------------------
+function initializeSampleData() {
+    // Verificar se é a primeira vez que o usuário acessa
+    const firstTime = !localStorage.getItem('mainlock:sample_added_' + logged.email);
+    
+    if (firstTime && DATA.claims.length === 0) {
+        const addSample = confirm('Deseja adicionar um sinistro de exemplo para conhecer as funcionalidades do sistema?');
+        if (addSample) {
+            addSampleClaim();
+            localStorage.setItem('mainlock:sample_added_' + logged.email, 'true');
+        }
+    }
+}
+
+// ---------------------- Expor a Função Globalmente ----------------------
+window.addSampleClaim = addSampleClaim;
+
+// ---------------------- Chamar a Inicialização no Carregamento ----------------------
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(initializeSampleData, 2000); // Esperar 2 segundos após o carregamento
+});
+</script>
+<!-- ADICIONE ESTA FUNÇÃO AO SCRIPT -->
+<script>
+// ---------------------- Função para Apagar Sinistros ----------------------
+function deleteClaim() {
+    const search = prompt('Digite o ID do sinistro que deseja apagar:');
+    if (search === null) return;
+    if (!search) {
+        alert('Por favor, digite o ID do sinistro!');
+        return;
+    }
+
+    // Buscar sinistro no sistema principal
+    const claimIndex = DATA.claims.findIndex(c => c.id.toString() === search);
+    
+    if (claimIndex === -1) {
+        alert('Sinistro não encontrado!');
+        return;
+    }
+
+    const claim = DATA.claims[claimIndex];
+    
+    // Mostrar detalhes do sinistro antes da exclusão
+    const claimDetails = `
+CONFIRMAR EXCLUSÃO DE SINISTRO:
+
+ID: ${claim.id}
+Tipo: ${claim.type}
+Apólice: ${claim.policy}
+Data: ${fmtDate(claim.date)}
+Status: ${claim.status}
+Descrição: ${claim.notes || 'Nenhuma'}
+Fotos: ${claim.photos ? claim.photos.length : 0} anexada(s)
+
+⚠️  ATENÇÃO: Esta ação é PERMANENTE e IRREVERSÍVEL!
+    `.trim();
+
+    alert(claimDetails);
+
+    const confirmation1 = confirm(`⚠️  CONFIRMAÇÃO 1/2\n\nDeseja realmente EXCLUIR PERMANENTEMENTE este sinistro?`);
+    if (!confirmation1) {
+        alert('Exclusão cancelada.');
+        return;
+    }
+
+    const confirmation2 = confirm(`⚠️  CONFIRMAÇÃO 2/2\n\nÚLTIMO AVISO:\n\nSinistro ID: ${claim.id}\nTipo: ${claim.type}\n\nEsta ação EXCLUIRÁ TODOS os dados do sinistro permanentemente!\n\nConfirmar exclusão?`);
+    if (!confirmation2) {
+        alert('Exclusão cancelada.');
+        return;
+    }
+
+    // Remover sinistro do sistema principal
+    const removedClaim = DATA.claims.splice(claimIndex, 1)[0];
+    
+    // Remover sinistro das apólices (se existir)
+    POLICY_DATA.policies.forEach(policy => {
+        if (policy.claims && policy.claims.length > 0) {
+            const policyClaimIndex = policy.claims.findIndex(c => c.id.toString() === search);
+            if (policyClaimIndex > -1) {
+                policy.claims.splice(policyClaimIndex, 1);
+            }
+        }
+    });
+
+    save();
+    savePolicies();
+    
+    alert(`✅ Sinistro #${removedClaim.id} removido permanentemente do sistema.\n\nDados excluídos:\n- Informações do sinistro\n- ${removedClaim.photos ? removedClaim.photos.length : 0} fotos anexadas\n- Histórico associado`);
+    logActivity(`Sinistro removido: ${removedClaim.type} - ID: ${removedClaim.id}`);
+    renderAll();
+}
+
+// ---------------------- Função para Listar e Gerenciar Sinistros ----------------------
+function manageClaims() {
+    while(true) {
+        const option = prompt(
+            `GERENCIAR SINISTROS\n\n` +
+            `1 - Listar Todos os Sinistros\n` +
+            `2 - Consultar Sinistro Específico\n` +
+            `3 - Apagar Sinistro\n` +
+            `4 - Voltar\n\n` +
+            `Escolha uma opção:`
+        );
+
+        if (option === null) return;
+        if (option === '') continue;
+
+        switch(option) {
+            case '1':
+                listAllClaims();
+                break;
+            case '2':
+                viewSpecificClaim();
+                break;
+            case '3':
+                deleteClaim();
+                break;
+            case '4':
+                return;
+            default:
+                alert('Opção inválida!');
+        }
+    }
+}
+
+// ---------------------- Função para Listar Todos os Sinistros ----------------------
+function listAllClaims() {
+    if (DATA.claims.length === 0) {
+        alert('Nenhum sinistro cadastrado.');
+        return;
+    }
+
+    let list = `LISTA DE SINISTROS (${DATA.claims.length})\n\n`;
+    
+    DATA.claims.forEach(claim => {
+        list += `🔸 ID: ${claim.id}\n`;
+        list += `   Tipo: ${claim.type} | Apólice: ${claim.policy}\n`;
+        list += `   Data: ${fmtDate(claim.date)} | Status: ${claim.status}\n`;
+        list += `   Descrição: ${claim.notes ? (claim.notes.length > 50 ? claim.notes.substring(0, 50) + '...' : claim.notes) : 'Nenhuma'}\n`;
+        list += `   Fotos: ${claim.photos ? claim.photos.length : 0} anexada(s)\n\n`;
+    });
+
+    alert(list);
+}
+
+// ---------------------- Função para Consultar Sinistro Específico ----------------------
+function viewSpecificClaim() {
+    const search = prompt('Digite o ID do sinistro:');
+    if (search === null) return;
+    if (!search) {
+        alert('Por favor, digite o ID do sinistro!');
+        return;
+    }
+
+    const claim = DATA.claims.find(c => c.id.toString() === search);
+
+    if (!claim) {
+        alert('Sinistro não encontrado!');
+        return;
+    }
+
+    let claimInfo = `
+DETALHES COMPLETOS DO SINISTRO:
+
+ID: ${claim.id}
+Tipo: ${claim.type}
+Apólice: ${claim.policy}
+Data: ${fmtDate(claim.date)}
+Status: ${claim.status}
+Descrição: ${claim.notes || 'Nenhuma descrição fornecida'}
+Fotos: ${claim.photos ? claim.photos.length : 0} anexada(s)
+
+${claim.photos && claim.photos.length > 0 ? '📷 Fotos disponíveis para visualização\n' : ''}
+    `.trim();
+
+    alert(claimInfo);
+    
+    // Oferecer opções adicionais
+    if (claim.photos && claim.photos.length > 0) {
+        const viewPhotos = confirm('Deseja visualizar as fotos deste sinistro?');
+        if (viewPhotos) {
+            openClaimPhotosModal(claim.id);
+        }
+    }
+}
+
+// ---------------------- Atualizar o Sistema de Gerenciamento de Seguros ----------------------
+function openInsuranceManagement() {
+    while(true) {
+        const option = prompt(
+            `SISTEMA DE GERENCIAMENTO DE SEGUROS\n\n` +
+            `1 - Gerenciar Apólices\n` +
+            `2 - Gerenciar Sinistros\n` +
+            `3 - Registrar Sinistro\n` +
+            `4 - Consultar Sinistros\n` +
+            `5 - Voltar para Área do Cliente\n\n` +
+            `Escolha uma opção:`
+        );
+
+        if (option === null) return;
+        if (option === '') continue;
+
+        switch(option) {
+            case '1':
+                managePolicy();
+                break;
+            case '2':
+                manageClaims();
+                break;
+            case '3':
+                registerClaimToPolicy();
+                break;
+            case '4':
+                viewPolicyClaims();
+                break;
+            case '5':
+                return;
+            default:
+                alert('Opção inválida!');
+        }
+    }
+}
+
+// ---------------------- Adicionar Botão de Gerenciar Sinistros na Interface ----------------------
+// Esta função será chamada para atualizar a interface
+function addClaimsManagementButton() {
+    // Encontrar o card de sinistros
+    const claimsCard = document.querySelector('.card .section-title:contains("Sinistros")')?.closest('.card');
+    
+    if (claimsCard) {
+        // Verificar se o botão já existe
+        if (!claimsCard.querySelector('.btn-warning')) {
+            const buttonContainer = claimsCard.querySelector('.sin-list')?.nextElementSibling?.nextElementSibling;
+            
+            if (buttonContainer) {
+                const manageButton = document.createElement('button');
+                manageButton.className = 'btn warning';
+                manageButton.textContent = 'Gerenciar Sinistros';
+                manageButton.onclick = manageClaims;
+                manageButton.style.marginLeft = '8px';
+                
+                buttonContainer.appendChild(manageButton);
+            }
+        }
+    }
+}
+
+// Duplicate renderAll override removed — functionality already handled by the earlier renderAll override
+
+// ---------------------- Expor as Novas Funções Globalmente ----------------------
+window.deleteClaim = deleteClaim;
+window.manageClaims = manageClaims;
+window.listAllClaims = listAllClaims;
+window.viewSpecificClaim = viewSpecificClaim;
+
+</script>
+
+</head>
+<body>
+<script>
+// ---------------------- Adicionar Apólice de Exemplo ----------------------
+function addSamplePolicy() {
+    const samplePolicy = {
+        id: POLICY_DATA.nextId++,
+        number: 'AUTO' + new Date().getFullYear() + Math.floor(1000 + Math.random() * 9000),
+        clientName: DATA.client.name,
+        type: 'Auto',
+        premium: 1200.00 + Math.floor(Math.random() * 800),
+        startDate: new Date().toLocaleDateString('pt-BR'),
+        endDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toLocaleDateString('pt-BR'),
+        coverage: ['Colisão', 'Roubo ou Furto', 'Incêndio', 'Danos a Terceiros', 'Assistência 24h', 'Carro Reserva'],
+        status: 'Ativa',
+        createdAt: new Date().toISOString(),
+        claims: []
+    };
+
+    // Verificar se já existe uma apólice de exemplo
+    const existingSample = POLICY_DATA.policies.find(p => p.number.startsWith('AUTO'));
+    if (existingSample) {
+        alert('Já existe uma apólice de exemplo no sistema!');
+        return;
+    }
+
+    POLICY_DATA.policies.push(samplePolicy);
+    savePolicies();
+    
+    // Adicionar notificação
+    DATA.notifications.push({
+        id: Date.now(),
+        title: `Nova apólice criada: ${samplePolicy.number}`,
+        date: new Date().toISOString(),
+        read: false
+    });
+
+    logActivity(`Apólice de exemplo adicionada: ${samplePolicy.number} - ${samplePolicy.type}`);
+    renderAll();
+    
+    alert(`✅ Apólice de exemplo criada com sucesso!\n\nDetalhes:\n• Número: ${samplePolicy.number}\n• Tipo: ${samplePolicy.type}\n• Valor: R$ ${samplePolicy.premium.toFixed(2)}\n• Vencimento: ${samplePolicy.endDate}\n• Coberturas: ${samplePolicy.coverage.length} inclusas`);
+}
+
+// ---------------------- Adicionar Botão na Interface ----------------------
+function addSamplePolicyButton() {
+    // Encontrar o card de apólices
+    const policiesCard = document.querySelector('.card .section-title:contains("Minhas Apólices")')?.closest('.card');
+    
+    if (policiesCard && !policiesCard.querySelector('.btn-sample-policy')) {
+        const buttonContainer = policiesCard.querySelector('#policiesList')?.nextElementSibling;
+        
+        if (buttonContainer) {
+            const sampleButton = document.createElement('button');
+            sampleButton.className = 'btn info btn-sample-policy';
+            sampleButton.textContent = 'Add Exemplo Apólice';
+            sampleButton.onclick = addSamplePolicy;
+            sampleButton.style.marginLeft = '8px';
+            sampleButton.title = 'Adicionar uma apólice de exemplo para testar as funcionalidades';
+            
+            buttonContainer.appendChild(sampleButton);
+        }
+    }
+}
+
+// ---------------------- Atualizar a Função renderAll ----------------------
+const originalRenderAll = window.renderAll;
+window.renderAll = function() {
+    originalRenderAll();
+    setTimeout(addSamplePolicyButton, 100);
+    setTimeout(addSampleClaimButton, 100);
+    setTimeout(addClaimsManagementButton, 100);
+};
+
+// ---------------------- Expor a Função Globalmente ----------------------
+window.addSamplePolicy = addSamplePolicy;
+</script>
+  <script>
+    
+// ---------------------- Serviço de Geolocalização Corrigido ----------------------
+const GEOLOCATION = {
+    enabled: false,
+    history: [],
+    watchId: null,
+    isLoading: false,
+    lastError: null
+};
+
+// Carregar dados salvos
+function loadGeolocationData() {
+    try {
+        const saved = localStorage.getItem('mainlock_geolocation');
+        if (saved) {
+            const data = JSON.parse(saved);
+            GEOLOCATION.enabled = data.enabled || false;
+            GEOLOCATION.history = data.history || [];
+        }
+    } catch (error) {
+        console.error('Erro ao carregar dados de geolocalização:', error);
+    }
+}
+
+// Salvar dados
+function saveGeolocationData() {
+    try {
+        localStorage.setItem('mainlock_geolocation', JSON.stringify({
+            enabled: GEOLOCATION.enabled,
+            history: GEOLOCATION.history
+        }));
+    } catch (error) {
+        console.error('Erro ao salvar dados de geolocalização:', error);
+    }
+}
+
+// Verificar suporte a geolocalização
+function isGeolocationSupported() {
+    return 'geolocation' in navigator;
+}
+
+// Iniciar geolocalização
+async function startGeolocation() {
+    if (!isGeolocationSupported()) {
+        GEOLOCATION.lastError = 'Geolocalização não suportada pelo navegador';
+        updateGeolocationPanel();
+        alert('❌ Seu navegador não suporta geolocalização.');
+        return false;
+    }
+
+    GEOLOCATION.isLoading = true;
+    GEOLOCATION.lastError = null;
+    updateGeolocationPanel();
+
+    try {
+        // Primeiro verificamos a permissão
+        const permission = await navigator.permissions?.query({ name: 'geolocation' });
+        
+        if (permission && permission.state === 'denied') {
+            throw new Error('Permissão negada pelo usuário');
+        }
+
+        return new Promise((resolve) => {
+            const options = {
+                enableHighAccuracy: true,
+                timeout: 15000,
+                maximumAge: 60000
+            };
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    GEOLOCATION.isLoading = false;
+                    handleLocationSuccess(position);
+                    
+                    // Iniciar monitoramento contínuo
+                    GEOLOCATION.watchId = navigator.geolocation.watchPosition(
+                        handleLocationSuccess,
+                        handleLocationError,
+                        options
+                    );
+
+                    GEOLOCATION.enabled = true;
+                    saveGeolocationData();
+                    resolve(true);
+                },
+                (error) => {
+                    GEOLOCATION.isLoading = false;
+                    handleLocationError(error);
+                    resolve(false);
+                },
+                options
+            );
+        });
+
+    } catch (error) {
+        GEOLOCATION.isLoading = false;
+        handleLocationError(error);
+        return false;
+    }
+}
+
+// Parar geolocalização
+function stopGeolocation() {
+    if (GEOLOCATION.watchId) {
+        navigator.geolocation.clearWatch(GEOLOCATION.watchId);
+        GEOLOCATION.watchId = null;
+    }
+    GEOLOCATION.enabled = false;
+    GEOLOCATION.lastError = null;
+    saveGeolocationData();
+    updateGeolocationPanel();
+}
+
+// Sucesso na localização
+function handleLocationSuccess(position) {
+    const locationData = {
+        timestamp: new Date().toISOString(),
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+        accuracy: position.coords.accuracy,
+        altitude: position.coords.altitude,
+        heading: position.coords.heading,
+        speed: position.coords.speed
+    };
+
+    console.log('📍 Localização obtida:', locationData);
+
+    // Adicionar ao histórico (máximo 10 entradas)
+    GEOLOCATION.history.unshift(locationData);
+    if (GEOLOCATION.history.length > 10) {
+        GEOLOCATION.history = GEOLOCATION.history.slice(0, 10);
+    }
+
+    GEOLOCATION.lastError = null;
+    saveGeolocationData();
+    updateGeolocationPanel();
+}
+
+// Erro na localização
+function handleLocationError(error) {
+    let message = '';
+    
+    switch(error.code) {
+        case error.PERMISSION_DENIED:
+            message = 'Permissão de localização negada. Ative nas configurações do seu navegador.';
+            break;
+        case error.POSITION_UNAVAILABLE:
+            message = 'Localização indisponível. Verifique se o GPS está ativado.';
+            break;
+        case error.TIMEOUT:
+            message = 'Tempo esgotado para obter localização. Tente novamente.';
+            break;
+        default:
+            message = 'Erro ao obter localização: ' + error.message;
+    }
+    
+    console.error('Erro de geolocalização:', error);
+    GEOLOCATION.lastError = message;
+    GEOLOCATION.enabled = false;
+    GEOLOCATION.isLoading = false;
+    
+    if (GEOLOCATION.watchId) {
+        navigator.geolocation.clearWatch(GEOLOCATION.watchId);
+        GEOLOCATION.watchId = null;
+    }
+    
+    saveGeolocationData();
+    updateGeolocationPanel();
+}
+
+// Alternar geolocalização
+async function toggleGeolocation() {
+    if (GEOLOCATION.enabled) {
+        stopGeolocation();
+        alert('📍 Localização desativada');
+    } else {
+        const confirmed = confirm(
+            '🔍 Ativar serviço de localização?\n\n' +
+            'Benefícios:\n' +
+            '• Localização precisa em sinistros\n' +
+            '• Assistência mais rápida\n' +
+            '• Serviços baseados em sua localização\n\n' +
+            'Sua privacidade é respeitada. A localização só é usada para atendimento.'
+        );
+        
+        if (confirmed) {
+            const success = await startGeolocation();
+            if (success) {
+                alert('✅ Localização ativada com sucesso!');
+            } else {
+                alert('❌ Não foi possível ativar a localização. Verifique as permissões do navegador.');
+            }
+        }
+    }
+}
+
+// Obter localização atual (função simplificada)
+function getCurrentLocation() {
+    return new Promise((resolve, reject) => {
+        if (!isGeolocationSupported()) {
+            reject(new Error('Geolocalização não suportada'));
+            return;
+        }
+
+        const options = {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+        };
+
+        navigator.geolocation.getCurrentPosition(
+            (position) => resolve({
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+                accuracy: position.coords.accuracy,
+                timestamp: new Date().toISOString()
+            }),
+            (error) => reject(error),
+            options
+        );
+    });
+}
+
+// Usar localização em sinistro
+async function useLocationForClaim() {
+    if (!GEOLOCATION.enabled || !GEOLOCATION.history.length) {
+        const useAnyway = confirm(
+            'Localização não disponível. Deseja:\n\n' +
+            '• Tentar obter localização agora (Recomendado)\n' +
+            '• Registrar sinistro sem localização'
+        );
+        
+        if (useAnyway) {
+            try {
+                const location = await getCurrentLocation();
+                GEOLOCATION.history.unshift({
+                    timestamp: location.timestamp,
+                    latitude: location.latitude,
+                    longitude: location.longitude,
+                    accuracy: location.accuracy
+                });
+                saveGeolocationData();
+                updateGeolocationPanel();
+            } catch (error) {
+                console.error('Erro ao obter localização:', error);
+                alert('Não foi possível obter a localização. O sinistro será registrado sem localização.');
+            }
+        }
+    }
+
+    // Continuar com o registro do sinistro
+    openClaimFormWithLocation();
+}
+
+// Registrar sinistro com localização
+async function openClaimFormWithLocation() {
+    let locationInfo = '';
+    
+    if (GEOLOCATION.history.length > 0) {
+        const current = GEOLOCATION.history[0];
+        const address = await getAddressFromCoords(current.latitude, current.longitude);
+        locationInfo = `\n\n📍 Localização Automática: ${address}\nCoordenadas: ${current.latitude.toFixed(6)}, ${current.longitude.toFixed(6)}`;
+    }
+
+    const type = prompt('Digite o tipo de sinistro:\n(ex: Colisão, Roubo, Vidros, Incêndio)');
+    if (!type) return;
+
+    const defaultNotes = 'Descreva o ocorrido:';
+    const notes = prompt(defaultNotes + (locationInfo ? '\n\n' + locationInfo.split('\n')[1] : ''));
+    if (notes === null) return;
+
+    const fullNotes = locationInfo ? notes + locationInfo : notes;
+
+    const newClaim = {
+        id: Date.now(),
+        type: type,
+        date: new Date().toISOString(),
+        status: 'Registrado',
+        policy: 'Seguro Automóvel',
+        notes: fullNotes,
+        photos: [],
+        location: GEOLOCATION.history[0] || null
+    };
+
+    DATA.claims.push(newClaim);
+    save();
+    
+    logActivity(`Sinistro registrado: ${type}${locationInfo ? ' com localização' : ''}`);
+    renderAll();
+
+    alert('✅ Sinistro registrado com sucesso!' + (locationInfo ? '\n\n📍 Sua localização foi capturada automaticamente.' : ''));
+}
+
+// Simular endereço (função melhorada)
+async function getAddressFromCoords(lat, lng) {
+    // Em um sistema real, aqui seria uma chamada API para reverse geocoding
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            const addresses = [
+                `Avenida Paulista, ${Math.floor(1000 + Math.random() * 1000)}, São Paulo - SP`,
+                `Rua Augusta, ${Math.floor(200 + Math.random() * 800)}, São Paulo - SP`,
+                `Rua da Consolação, ${Math.floor(300 + Math.random() * 1200)}, São Paulo - SP`,
+                `Alameda Santos, ${Math.floor(400 + Math.random() * 900)}, São Paulo - SP`,
+                `Praça da Sé, ${Math.floor(1)}, São Paulo - SP`
+            ];
+            resolve(addresses[Math.floor(Math.random() * addresses.length)]);
+        }, 800);
+    });
+}
+
+// Encontrar serviços próximos
+function findNearbyServices() {
+    if (!GEOLOCATION.history.length) {
+        alert('📍 Ative a localização primeiro para encontrar serviços próximos.');
+        return;
+    }
+
+    const current = GEOLOCATION.history[0];
+    const services = [
+        { name: '🔧 Oficina Credenciada', distance: `${(0.5 + Math.random() * 2).toFixed(1)} km`, phone: '(11) 3456-7890' },
+        { name: '🚗 Guincho 24h', distance: `${(0.8 + Math.random() * 1.5).toFixed(1)} km`, phone: '(11) 9876-5432' },
+        { name: '🏥 Hospital Próximo', distance: `${(1.2 + Math.random() * 2).toFixed(1)} km`, phone: '192' },
+        { name: '👮 Delegacia', distance: `${(1.5 + Math.random() * 2).toFixed(1)} km`, phone: '190' },
+        { name: '⛽ Posto de Gasolina', distance: `${(0.3 + Math.random() * 1).toFixed(1)} km`, phone: '(11) 2345-6789' }
+    ];
+
+    let message = '🆘 SERVIÇOS PRÓXIMOS DA SUA LOCALIZAÇÃO\n\n';
+    services.forEach(service => {
+        message += `${service.name}\n`;
+        message += `📏 ${service.distance} | 📞 ${service.phone}\n\n`;
+    });
+
+    message += `📍 Sua localização atual:\n${current.latitude.toFixed(6)}, ${current.longitude.toFixed(6)}`;
+    
+    const help = confirm(message + '\n\nDeseja acionar algum serviço?');
+    if (help) {
+        simulateAssistance('Serviço Local');
+    }
+}
+
+// Limpar histórico
+function clearLocationHistory() {
+    if (confirm('Tem certeza que deseja limpar o histórico de localização?')) {
+        GEOLOCATION.history = [];
+        saveGeolocationData();
+        updateGeolocationPanel();
+        alert('Histórico de localização limpo.');
+    }
+}
+
+// Atualizar painel de geolocalização
+function updateGeolocationPanel() {
+    const panel = document.getElementById('geolocationPanel');
+    if (!panel) return;
+
+    const currentLocation = GEOLOCATION.history[0];
+    const isSupported = isGeolocationSupported();
+
+    let statusContent = '';
+    
+    if (GEOLOCATION.isLoading) {
+        statusContent = '<div class="location-loading">🔄 Obtendo localização...</div>';
+    } else if (GEOLOCATION.lastError) {
+        statusContent = `<div class="location-error">❌ ${GEOLOCATION.lastError}</div>`;
+    } else if (GEOLOCATION.enabled && currentLocation) {
+        statusContent = `
+            <div class="location-status location-active">
+                ✅ LOCALIZAÇÃO ATIVA
+            </div>
+            <div class="location-coords">
+                <div>📍 Localização Atual</div>
+                <div style="font-size: 0.9rem; margin: 5px 0;">
+                    <strong>${currentLocation.latitude.toFixed(6)}</strong><br>
+                    <strong>${currentLocation.longitude.toFixed(6)}</strong>
+                </div>
+                <div style="font-size: 0.7rem; color: #6b7a86;">
+                    Precisão: ${currentLocation.accuracy.toFixed(1)} metros<br>
+                    ${new Date(currentLocation.timestamp).toLocaleTimeString('pt-BR')}
+                </div>
+            </div>
+        `;
+    } else {
+        statusContent = `
+            <div class="location-status location-inactive">
+                ❌ LOCALIZAÇÃO DESATIVADA
+            </div>
+            <div style="text-align: center; color: #6b7a86; padding: 10px; font-size: 0.8rem;">
+                ${!isSupported ? 'Seu navegador não suporta geolocalização' : 'Ative para obter sua localização'}
+            </div>
+        `;
+    }
+
+    panel.innerHTML = `
+        <div class="section-title">📍 Serviço de Localização</div>
+        
+        ${statusContent}
+
+        <div style="margin: 15px 0;">
+            <button class="location-btn ${GEOLOCATION.enabled ? 'danger' : 'success'}" 
+                    onclick="toggleGeolocation()"
+                    ${!isSupported ? 'disabled' : ''}>
+                ${GEOLOCATION.enabled ? '🔴 Desativar Localização' : '🟢 Ativar Localização'}
+            </button>
+            
+            <button class="location-btn" 
+                    onclick="useLocationForClaim()"
+                    ${!currentLocation ? 'disabled' : ''}>
+                📝 Registrar Sinistro
+            </button>
+            
+            <button class="location-btn" 
+                    onclick="findNearbyServices()"
+                    ${!currentLocation ? 'disabled' : ''}>
+                🆘 Serviços Próximos
+            </button>
+        </div>
+
+        ${GEOLOCATION.history.length > 0 ? `
+            <div>
+                <div style="font-weight: 600; margin: 10px 0 5px 0; font-size: 0.9rem;">
+                    📊 Histórico (${GEOLOCATION.history.length})
+                </div>
+                <div class="location-history">
+                    ${GEOLOCATION.history.slice(0, 5).map((loc, index) => `
+                        <div class="location-item">
+                            <div>${new Date(loc.timestamp).toLocaleTimeString('pt-BR')}</div>
+                            <div style="font-size: 0.7rem; color: #6b7a86;">
+                                ${loc.latitude.toFixed(4)}, ${loc.longitude.toFixed(4)}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div style="text-align: center; margin-top: 8px;">
+                    <button class="btn secondary small" onclick="clearLocationHistory()">
+                        🗑️ Limpar Histórico
+                    </button>
+                </div>
+            </div>
+        ` : ''}
+
+        ${!isSupported ? `
+            <div class="location-error" style="margin-top: 10px;">
+                ⚠️ Seu navegador não suporta geolocalização.<br>
+                Experimente usar Chrome, Firefox ou Edge.
+            </div>
+        ` : ''}
+    `;
+}
+
+// Adicionar painel à interface
+function addGeolocationPanel() {
+    const leftColumn = document.querySelector('.grid > div:first-child');
+    if (!leftColumn || document.getElementById('geolocationPanel')) return;
+
+    const panel = document.createElement('div');
+    panel.className = 'card';
+    panel.id = 'geolocationPanel';
+    
+    // Inserir após o card de perfil
+    const profileCard = leftColumn.querySelector('.card');
+    if (profileCard) {
+        profileCard.parentNode.insertBefore(panel, profileCard.nextSibling);
+    } else {
+        leftColumn.appendChild(panel);
+    }
+
+    updateGeolocationPanel();
+}
+
+// ---------------------- Inicialização Corrigida ----------------------
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🔧 Inicializando serviço de geolocalização...');
+    
+    loadGeolocationData();
+    
+    // Verificar se podemos reiniciar o monitoramento
+    if (GEOLOCATION.enabled && isGeolocationSupported()) {
+        console.log('🔄 Reiniciando monitoramento de localização...');
+        startGeolocation().then(success => {
+            if (!success) {
+                console.log('❌ Não foi possível reiniciar a localização');
+                GEOLOCATION.enabled = false;
+                saveGeolocationData();
+            }
+        });
+    }
+    
+    // Adicionar painel após um breve delay
+    setTimeout(() => {
+        addGeolocationPanel();
+        console.log('✅ Painel de geolocalização carregado');
+    }, 500);
+});
+
+// Expor funções globalmente
+window.toggleGeolocation = toggleGeolocation;
+window.useLocationForClaim = useLocationForClaim;
+window.findNearbyServices = findNearbyServices;
+window.clearLocationHistory = clearLocationHistory;
+window.openClaimFormWithLocation = openClaimFormWithLocation;
+</script>
+
+</script>
+<header>
+    <h1>Área do Cliente</h1>
+    
+    <!-- Menu de Navegação Adicionado -->
+    <div class="nav-menu">
+      <button class="nav-btn" onclick="openInsuranceManagement()">Gerenciar Seguros</button>
+      <button class="nav-btn" onclick="managePolicy()">Gerenciar Apólices</button>
+      <button class="nav-btn" onclick="manageClaims()">Gerenciar Sinistros</button>
+    </div>
+    
+    <div class="clock-container">
+      <div class="pill" id="clock">--/--/----</div>
+      <button class="btn" onclick="logout()">Sair</button>
+    </div>
+  </header>
+
+<div class="wrap">
+  <div class="grid">
+    <!-- LEFT -->
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <div class="card">
+        <div class="profile">
+          <div class="avatar" id="avatar" onclick="openPhotoUpload()">
+            <div id="avatarInitials">--</div>
+            <div class="avatar-edit">Alterar foto</div>
+          </div>
+          <div>
+            <div style="font-weight:700" id="clientName">Nome</div>
+            <div class="small">E-mail: <span id="email">--</span></div>
+            <div class="cpf-display" id="cpfDisplay">CPF: <span id="cpf">--</span></div>
+            <button class="photo-upload-btn" onclick="openPhotoUpload()">Alterar Foto</button>
+          </div>
+        </div>
+        <hr style="margin:12px 0;border:none;border-top:1px solid #f0f0f0">
+        <div class="section-title">Resumo</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <div class="pill">Apólices: <strong id="countPolicies">0</strong></div>
+          <div class="pill">Sinistros: <strong id="countClaims">0</strong></div>
+          <div class="pill">Faturas em aberto: <strong id="countDue">0</strong></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Coberturas</div>
+        <div class="cover-grid" id="coverages"></div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Central de Notificações</div>
+        <div class="notif-list" id="notifications"></div>
+        <div style="margin-top:10px;display:flex;gap:8px;justify-content:flex-end">
+          <button class="btn secondary" onclick="clearNotifications()">Marcar todas como lidas</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MIDDLE -->
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="section-title">Faturas / Pagamentos</div>
+          <div class="small">Saldo total a pagar: <strong id="totalBalance">R$ 0,00</strong></div>
+        </div>
+
+        <div style="overflow:auto;margin-top:8px">
+          <table id="invoicesTable">
+            <thead>
+              <tr><th>Apólice</th><th>Vencimento</th><th>Status</th><th>Valor</th><th>Ações</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Minhas Apólices</div>
+        <div id="policiesList" style="display:flex;flex-direction:column;gap:10px"></div>
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn success" onclick="createNewPolicy()">Nova Apólice</button>
+          <button class="btn" onclick="managePolicy()">Gerenciar Apólices</button>
+        </div>
+      </div>
+
+      <div class="card">
+    <div class="section-title">Sinistros</div>
+    <div class="sin-list" id="claimsList"></div>
+    <div style="margin-top:12px">
+        <button class="btn" onclick="openClaimForm()">Registrar novo sinistro</button>
+        <button class="btn warning" onclick="manageClaims()">Gerenciar Sinistros</button>
+        <button class="btn info" onclick="addSampleClaim()">Add Exemplo</button>
+    </div>
+</div>
+
+      <div class="card">
+        <div class="section-title">Atividade Recente</div>
+        <ul id="activityLog" style="margin-top:8px;list-style:none;padding-left:0;color:var(--muted)"></ul>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <div class="card chat-window">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="section-title">Chat Virtual</div>
+          <div class="small">Atendimento 24/7</div>
+        </div>
+        <div class="messages" id="messages" aria-live="polite"></div>
+        <div class="chat-input">
+          <input type="text" id="chatInput" placeholder="Escreva sua mensagem..." onkeydown="if(event.key==='Enter') sendMessage()">
+          <button class="btn" onclick="sendMessage()">Enviar</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Ajuda Rápida</div>
+        <p class="small">Atalhos úteis:</p>
+        <ul class="small" style="margin-left:14px">
+          <li>Solicitar 2ª via de boleto</li>
+          <li>Abrir sinistro (acidentes, roubo, colisão)</li>
+          <li>Assistência 24h (vidros, chaveiro, borracheiro)</li>
+          <li>Gerenciar apólices</li>
+        </ul>
+        <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+          <button class="btn" onclick="simulateAssistance('Vidros')">Assistência Vidros</button>
+          <button class="btn secondary" onclick="simulateAssistance('Chaveiro')">Chaveiro</button>
+          <button class="btn success" onclick="openInsuranceManagement()">Gerenciar Seguros</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para upload de foto de perfil -->
+<div id="photoModal" class="modal-bg" style="display:none">
+  <div class="modal">
+    <button class="close-btn" onclick="closePhotoUpload()">×</button>
+    <h3 style="margin-top:0">Alterar Foto de Perfil</h3>
+    <div style="text-align:center;margin:20px 0">
+      <div class="avatar" style="width:120px;height:120px;margin:0 auto 20px" id="previewAvatar">
+        <div id="previewInitials">--</div>
+      </div>
+      <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="previewPhoto()">
+      <button class="btn" onclick="document.getElementById('photoInput').click()">Escolher Foto</button>
+      <button class="btn secondary" onclick="removePhoto()" style="margin-left:10px">Remover Foto</button>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px">
+      <button class="btn secondary" onclick="closePhotoUpload()">Cancelar</button>
+      <button class="btn" onclick="savePhoto()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para upload de fotos do sinistro -->
+<div id="claimPhotosModal" class="modal-bg" style="display:none">
+  <div class="modal" style="max-width:600px">
+    <button class="close-btn" onclick="closeClaimPhotosModal()">×</button>
+    <h3 style="margin-top:0">Fotos do Sinistro</h3>
+    
+    <div class="upload-area" id="uploadArea" onclick="document.getElementById('claimPhotosInput').click()">
+      <div>📷 Clique aqui ou arraste fotos para adicionar</div>
+      <div class="small" style="margin-top:8px">Formatos: JPG, PNG, GIF (Máx. 5MB cada)</div>
+    </div>
+    
+    <input type="file" id="claimPhotosInput" accept="image/*" multiple style="display:none" onchange="handleClaimPhotosSelect(this.files)">
+    
+    <div class="photo-preview" id="photosPreview"></div>
+    
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px">
+      <button class="btn secondary" onclick="closeClaimPhotosModal()">Cancelar</button>
+      <button class="btn success" onclick="saveClaimPhotos()">Salvar Fotos</button>
+    </div>
+  </div>
+</div>
+
+<!-- modal area -->
+<div id="modals" style="display:none"></div>
+
+<script>
+    
+// ---------------------- Initialization (per-user data) ----------------------
+const logged = JSON.parse(localStorage.getItem('mainlock:logged'));
+if(!logged){ alert('Faça login primeiro.'); window.location.href='index.html'; }
+const dataKey = 'mainlock:data_' + encodeURIComponent(logged.email);
+
+// Estrutura de dados para apólices
+const POLICY_DATA = {
+    policies: JSON.parse(localStorage.getItem('insurance_policies_' + logged.email)) || [],
+    nextId: parseInt(localStorage.getItem('policy_next_id_' + logged.email)) || 1
+};
+
+// If user-specific data exists, load it; otherwise create default and save
+let DATA = JSON.parse(localStorage.getItem(dataKey) || 'null');
+if(!DATA){
+  DATA = {
+    client: {
+      ...logged,
+      cpf: logged.cpf || '123.456.789-00', // CPF padrão para demonstração
+      profilePhoto: null
+    },
+    coverages:[
+      {key:'vidros',name:'Vidros',active:true,desc:'Cobertura para quebra de vidros'},
+      {key:'assist24',name:'Assistência 24h',active:true,desc:'Socorro 24 horas: reboque, chaveiro, borracheiro'},
+      {key:'chaveiro',name:'Chaveiro',active:true,desc:'Atendimento para perda de chaves'},
+      {key:'borracheiro',name:'Borracheiro',active:false,desc:'Troca de pneus e guincho local'}
+    ],
+    notifications:[
+      {id:1,title:'Bem-vindo! Sua conta foi criada com sucesso.',date:new Date().toISOString(),read:false}
+    ],
+    invoices:[
+      {id:101,policy:'Seguro Automóvel',due:'2025-10-11',status:'due',amount:320.00},
+      {id:102,policy:'Seguro Residencial',due:'2025-10-10',status:'paid',amount:180.00},
+      {id:103,policy:'Seguro Vida',due:'2025-09-20',status:' OVERDUE',amount:150.00}
+    ],
+    claims:[],
+    activity:[]
+  };
+  localStorage.setItem(dataKey, JSON.stringify(DATA));
+}
+
+function save(){ 
+    localStorage.setItem(dataKey, JSON.stringify(DATA)); 
+    savePolicies();
+}
+
+// Função para salvar dados das apólices
+function savePolicies() {
+    localStorage.setItem('insurance_policies_' + logged.email, JSON.stringify(POLICY_DATA.policies));
+    localStorage.setItem('policy_next_id_' + logged.email, POLICY_DATA.nextId.toString());
+}
+
+// ---------------------- Helpers ----------------------
+function fmtDate(d){ return new Date(d).toLocaleDateString('pt-BR'); }
+function money(v){ return v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}); }
+function daysBetween(a,b){ const A=new Date(a).setHours(0,0,0,0); const B=new Date(b).setHours(0,0,0,0); return Math.round((A-B)/(1000*60*60*24)); }
+
+// ---------------------- Sistema de Upload de Fotos para Sinistros ----------------------
+let currentClaimPhotos = [];
+let currentClaimId = null;
+
+function openClaimPhotosModal(claimId) {
+    currentClaimId = claimId;
+    currentClaimPhotos = [];
+    
+    // Carregar fotos existentes se estiver editando
+    const claim = DATA.claims.find(c => c.id === claimId);
+    if (claim && claim.photos) {
+        currentClaimPhotos = [...claim.photos];
+        updatePhotosPreview();
+    }
+    
+    document.getElementById('claimPhotosModal').style.display = 'flex';
+    setupDragAndDrop();
+}
+
+function closeClaimPhotosModal() {
+    document.getElementById('claimPhotosModal').style.display = 'none';
+    currentClaimPhotos = [];
+    currentClaimId = null;
+    document.getElementById('claimPhotosInput').value = '';
+    document.getElementById('photosPreview').innerHTML = '';
+}
+
+function setupDragAndDrop() {
+    const uploadArea = document.getElementById('uploadArea');
+    
+    uploadArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+    });
+    
+    uploadArea.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+    });
+    
+    uploadArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        handleClaimPhotosSelect(files);
+    });
+}
+
+function handleClaimPhotosSelect(files) {
+    if (files.length === 0) return;
+    
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    const maxPhotos = 10;
+    
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        
+        // Verificar se é imagem
+        if (!file.type.startsWith('image/')) {
+            alert(`O arquivo "${file.name}" não é uma imagem válida.`);
+            continue;
+        }
+        
+        // Verificar tamanho
+        if (file.size > maxSize) {
+            alert(`A imagem "${file.name}" é muito grande. Tamanho máximo: 5MB.`);
+            continue;
+        }
+        
+        // Verificar limite de fotos
+        if (currentClaimPhotos.length >= maxPhotos) {
+            alert(`Limite máximo de ${maxPhotos} fotos atingido.`);
+            break;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            currentClaimPhotos.push({
+                id: Date.now() + i,
+                data: e.target.result,
+                name: file.name,
+                size: file.size,
+                type: file.type
+            });
+            updatePhotosPreview();
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function updatePhotosPreview() {
+    const preview = document.getElementById('photosPreview');
+    preview.innerHTML = '';
+    
+    currentClaimPhotos.forEach((photo, index) => {
+        const photoItem = document.createElement('div');
+        photoItem.className = 'photo-preview-item';
+        photoItem.innerHTML = `
+            <img src="${photo.data}" alt="Foto ${index + 1}">
+            <button class="remove-photo" onclick="removeClaimPhoto(${photo.id})">×</button>
+        `;
+        preview.appendChild(photoItem);
+    });
+    
+    // Atualizar contador
+    const uploadArea = document.getElementById('uploadArea');
+    const currentText = uploadArea.querySelector('div');
+    currentText.textContent = `📷 ${currentClaimPhotos.length} foto(s) selecionada(s) - Clique ou arraste para adicionar mais`;
+}
+
+function removeClaimPhoto(photoId) {
+    currentClaimPhotos = currentClaimPhotos.filter(photo => photo.id !== photoId);
+    updatePhotosPreview();
+}
+
+function saveClaimPhotos() {
+    if (currentClaimId && currentClaimPhotos.length > 0) {
+        const claim = DATA.claims.find(c => c.id === currentClaimId);
+        if (claim) {
+            claim.photos = currentClaimPhotos;
+            save();
+            renderAll();
+            alert(`${currentClaimPhotos.length} foto(s) salva(s) com sucesso no sinistro!`);
+        }
+    } else if (currentClaimPhotos.length === 0) {
+        alert('Nenhuma foto selecionada.');
+        return;
+    }
+    
+    closeClaimPhotosModal();
+}
+
+// ---------------------- Sistema de Gerenciamento de Apólices ----------------------
+function openInsuranceManagement() {
+    while(true) {
+        const option = prompt(
+            `SISTEMA DE GERENCIAMENTO DE SEGUROS\n\n` +
+            `1 - Gerenciar Apólices\n` +
+            `2 - Registrar Sinistro\n` +
+            `3 - Consultar Sinistros\n` +
+            `4 - Voltar para Área do Cliente\n\n` +
+            `Escolha uma opção:`
+        );
+
+        if (option === null) return;
+        if (option === '') continue;
+
+        switch(option) {
+            case '1':
+                managePolicy();
+                break;
+            case '2':
+                registerClaimToPolicy();
+                break;
+            case '3':
+                viewPolicyClaims();
+                break;
+            case '4':
+                return;
+            default:
+                alert('Opção inválida!');
+        }
+    }
+}
+
+function managePolicy() {
+    while(true) {
+        const option = prompt(
+            `GERENCIAR APÓLICE\n\n` +
+            `1 - Nova Apólice\n` +
+            `2 - Consultar Apólice\n` +
+            `3 - Renovar Apólice\n` +
+            `4 - Cancelar Apólice\n` +
+            `5 - Remover Apólice\n` +
+            `6 - Listar Todas Apólices\n` +
+            `7 - Voltar\n\n` +
+            `Escolha uma opção:`
+        );
+
+        if (option === null) return;
+        if (option === '') continue;
+
+        switch(option) {
+            case '1':
+                createNewPolicy();
+                break;
+            case '2':
+                viewPolicy();
+                break;
+            case '3':
+                renewPolicy();
+                break;
+            case '4':
+                cancelPolicy();
+                break;
+            case '5':
+                removePolicy();
+                break;
+            case '6':
+                listAllPolicies();
+                break;
+            case '7':
+                return;
+            default:
+                alert('Opção inválida!');
+        }
+    }
+}
+
+// Função para obter coberturas padrão por tipo de seguro
+function getDefaultCoverages(insuranceType) {
+    const coverages = {
+        'Auto': [
+            'Roubo ou furto',
+            'Colisão',
+            'Incêndio',
+            'Danos a terceiros (RCF-V)',
+            'Assistência 24 horas',
+            'Carro reserva',
+            'Danos a vidros',
+            'Danos a faróis e retrovisores',
+            'Proteção para acessórios'
+        ],
+        'Residência': [
+            'Incêndio',
+            'Queda de raios',
+            'Explosão',
+            'Danos elétricos',
+            'Roubo',
+            'Vendaval',
+            'Desastres naturais',
+            'Responsabilidade civil',
+            'Cobertura para bicicletas'
+        ],
+        'Vida': [
+            'Morte',
+            'Invalidez permanente',
+            'Invalidez temporária',
+            'Doenças graves',
+            'Diárias por incapacidade temporária',
+            'Cirurgias',
+            'Quebra de ossos'
+        ]
+    };
+    
+    return coverages[insuranceType] || [];
+}
+
+// 1. Criar nova apólice
+function createNewPolicy() {
+    const number = prompt('Número da Apólice:');
+    if (number === null) return;
+    if (!number) {
+        alert('Número da apólice é obrigatório!');
+        return;
+    }
+
+    if (POLICY_DATA.policies.find(p => p.number === number)) {
+        alert('Número de apólice já existe!');
+        return;
+    }
+
+    const clientName = DATA.client.name || prompt('Nome do Segurado:');
+    if (clientName === null) return;
+
+    const type = prompt('Tipo de Seguro (Auto, Residência, Vida):');
+    if (type === null) return;
+    if (!type) {
+        alert('Tipo de seguro é obrigatório!');
+        return;
+    }
+
+    // Validar tipo de seguro
+    const validTypes = ['Auto', 'Residência', 'Vida'];
+    if (!validTypes.includes(type)) {
+        alert('Tipo de seguro inválido! Escolha entre: Auto, Residência ou Vida');
+        return;
+    }
+
+    // Obter coberturas padrão baseadas no tipo de seguro
+    const defaultCoverages = getDefaultCoverages(type);
+    let selectedCoverages = [...defaultCoverages];
+
+    // Permitir que o usuário customize as coberturas
+    if (defaultCoverages.length > 0) {
+        const coverageMessage = `Coberturas padrão para ${type}:\n${defaultCoverages.map((cov, index) => `${index + 1}. ${cov}`).join('\n')}\n\nDeseja personalizar as coberturas? (Sim/Não)`;
+        const customize = prompt(coverageMessage);
+        
+        if (customize && customize.toLowerCase() === 'sim') {
+            const coverageInput = prompt(`Coberturas para ${type} (separadas por vírgula):\nCoberturas atuais: ${defaultCoverages.join(', ')}`);
+            if (coverageInput !== null) {
+                selectedCoverages = coverageInput ? coverageInput.split(',').map(cov => cov.trim()) : defaultCoverages;
+            }
+        }
+    } else {
+        const coverageInput = prompt(`Coberturas para ${type} (separadas por vírgula):`);
+        if (coverageInput === null) return;
+        selectedCoverages = coverageInput ? coverageInput.split(',').map(cov => cov.trim()) : [];
+    }
+
+    const premiumInput = prompt('Valor da Premiação (R$):');
+    if (premiumInput === null) return;
+    const premium = parseFloat(premiumInput);
+    if (isNaN(premium)) {
+        alert('Valor da premiação inválido!');
+        return;
+    }
+
+    const startDate = prompt('Data de Início (DD/MM/AAAA):');
+    if (startDate === null) return;
+    if (!startDate) {
+        alert('Data de início é obrigatória!');
+        return;
+    }
+
+    const endDate = prompt('Data de Término (DD/MM/AAAA):');
+    if (endDate === null) return;
+    if (!endDate) {
+        alert('Data de término é obrigatória!');
+        return;
+    }
+
+    const policy = {
+        id: POLICY_DATA.nextId++,
+        number: number,
+        clientName: clientName,
+        type: type,
+        premium: premium,
+        startDate: startDate,
+        endDate: endDate,
+        coverage: selectedCoverages,
+        status: 'Ativa',
+        createdAt: new Date().toISOString(),
+        claims: []
+    };
+
+    POLICY_DATA.policies.push(policy);
+    savePolicies();
+    
+    alert(`Apólice ${number} criada com sucesso!\nTipo: ${type}\nCoberturas: ${selectedCoverages.join(', ')}\nStatus: ${policy.status}`);
+    logActivity(`Nova apólice criada: ${number} - ${type}`);
+    renderAll();
+}
+
+// 2. Consultar apólice
+function viewPolicy() {
+    const search = prompt('Digite o número ou ID da apólice:');
+    if (search === null) return;
+    if (!search) {
+        alert('Por favor, digite um número ou ID da apólice!');
+        return;
+    }
+
+    const policy = POLICY_DATA.policies.find(p => 
+        p.number === search || p.id.toString() === search
+    );
+
+    if (!policy) {
+        alert('Apólice não encontrada!');
+        return;
+    }
+
+    const policyInfo = `
+DETALHES DA APÓLICE:
+
+Número: ${policy.number}
+Segurado: ${policy.clientName}
+Tipo: ${policy.type}
+Status: ${policy.status}
+Premiação: R$ ${policy.premium?.toFixed(2) || '0.00'}
+Início: ${policy.startDate}
+Término: ${policy.endDate}
+Coberturas (${policy.coverage.length}):
+${policy.coverage.map(cov => `  • ${cov}`).join('\n')}
+Sinistros: ${policy.claims?.length || 0} ocorrências
+
+[ID: ${policy.id}]
+    `.trim();
+
+    alert(policyInfo);
+}
+
+// 3. Renovar apólice
+function renewPolicy() {
+    const search = prompt('Digite o número da apólice para renovar:');
+    if (search === null) return;
+    if (!search) {
+        alert('Por favor, digite o número da apólice!');
+        return;
+    }
+
+    const policy = POLICY_DATA.policies.find(p => p.number === search);
+
+    if (!policy) {
+        alert('Apólice não encontrada!');
+        return;
+    }
+
+    if (policy.status !== 'Ativa') {
+        alert('Só é possível renovar apólices ativas!');
+        return;
+    }
+
+    const newEndDate = prompt('Nova data de término (DD/MM/AAAA):');
+    if (newEndDate === null) return;
+    if (!newEndDate) {
+        alert('Data de término é obrigatória!');
+        return;
+    }
+
+    const premiumAdjustmentInput = prompt('Ajuste na premiação (R$):\n(0 para manter mesmo valor)');
+    if (premiumAdjustmentInput === null) return;
+    const premiumAdjustment = parseFloat(premiumAdjustmentInput);
+    if (isNaN(premiumAdjustment)) {
+        alert('Valor de ajuste inválido!');
+        return;
+    }
+
+    // Oferecer para atualizar coberturas na renovação
+    const updateCoverages = confirm('Deseja atualizar as coberturas durante a renovação?');
+    if (updateCoverages) {
+        const currentCoverages = policy.coverage.join(', ');
+        const newCoveragesInput = prompt(`Coberturas atuais: ${currentCoverages}\n\nNovas coberturas (separadas por vírgula):`);
+        if (newCoveragesInput !== null) {
+            policy.coverage = newCoveragesInput ? newCoveragesInput.split(',').map(cov => cov.trim()) : policy.coverage;
+        }
+    }
+
+    policy.endDate = newEndDate;
+    if (premiumAdjustment !== 0) {
+        policy.premium = (policy.premium || 0) + premiumAdjustment;
+    }
+
+    policy.status = 'Renovada';
+    savePolicies();
+    
+    alert(`Apólice ${policy.number} renovada até ${newEndDate}\n${updateCoverages ? 'Coberturas atualizadas!' : ''}`);
+    logActivity(`Apólice renovada: ${policy.number}`);
+    renderAll();
+}
+
+// 4. Cancelar apólice
+function cancelPolicy() {
+    const search = prompt('Digite o número da apólice para cancelar:');
+    if (search === null) return;
+    if (!search) {
+        alert('Por favor, digite o número da apólice!');
+        return;
+    }
+
+    const policy = POLICY_DATA.policies.find(p => p.number === search);
+
+    if (!policy) {
+        alert('Apólice não encontrada!');
+        return;
+    }
+
+    const reason = prompt('Motivo do cancelamento:');
+    if (reason === null) return;
+
+    const confirmation = confirm(`Cancelar apólice ${policy.number}?\nTipo: ${policy.type}\nEsta ação não pode ser desfeita.`);
+
+    if (confirmation) {
+        policy.status = 'Cancelada';
+        policy.cancellationReason = reason;
+        policy.cancelledAt = new Date().toISOString();
+        savePolicies();
+        
+        alert(`Apólice ${policy.number} cancelada.`);
+        logActivity(`Apólice cancelada: ${policy.number} - Motivo: ${reason}`);
+        renderAll();
+    }
+}
+
+// 5. Remover apólice (EXCLUSÃO PERMANENTE)
+function removePolicy() {
+    const search = prompt('Digite o número da apólice para REMOVER PERMANENTEMENTE:');
+    if (search === null) return;
+    if (!search) {
+        alert('Por favor, digite o número da apólice!');
+        return;
+    }
+
+    const policy = POLICY_DATA.policies.find(p => p.number === search);
+
+    if (!policy) {
+        alert('Apólice não encontrada!');
+        return;
+    }
+
+    // Mostrar detalhes da apólice antes da remoção
+    const policyDetails = `
+CONFIRMAR REMOÇÃO PERMANENTE:
+
+Número: ${policy.number}
+Tipo: ${policy.type}
+Segurado: ${policy.clientName}
+Status: ${policy.status}
+Valor: R$ ${(policy.premium || 0).toFixed(2)}
+Coberturas: ${policy.coverage.length}
+Sinistros: ${policy.claims?.length || 0}
+
+⚠️  ATENÇÃO: Esta ação é PERMANENTE e IRREVERSÍVEL!
+    `.trim();
+
+    alert(policyDetails);
+
+    const confirmation1 = confirm(`⚠️  CONFIRMAÇÃO 1/2\n\nDeseja realmente REMOVER PERMANENTEMENTE a apólice ${policy.number}?`);
+    if (!confirmation1) {
+        alert('Remoção cancelada.');
+        return;
+    }
+
+    const confirmation2 = confirm(`⚠️  CONFIRMAÇÃO 2/2\n\nÚLTIMO AVISO:\n\nApólice: ${policy.number}\nTipo: ${policy.type}\n\nEsta ação EXCLUIRÁ TODOS os dados permanentemente!\n\nConfirmar remoção?`);
+    if (!confirmation2) {
+        alert('Remoção cancelada.');
+        return;
+    }
+
+    // Remover a apólice do array
+    const policyIndex = POLICY_DATA.policies.findIndex(p => p.number === search);
+    if (policyIndex > -1) {
+        const removedPolicy = POLICY_DATA.policies.splice(policyIndex, 1)[0];
+        savePolicies();
+        
+        alert(`✅ Apólice ${removedPolicy.number} removida permanentemente do sistema.\n\nDados excluídos:\n- Informações da apólice\n- ${removedPolicy.claims?.length || 0} sinistros registrados\n- Histórico de coberturas`);
+        logActivity(`Apólice removida permanentemente: ${removedPolicy.number} - ${removedPolicy.type}`);
+        renderAll();
+    }
+}
+
+// 6. Listar todas apólices
+function listAllPolicies() {
+    if (POLICY_DATA.policies.length === 0) {
+        alert('Nenhuma apólice cadastrada.');
+        return;
+    }
+
+    let list = `LISTA DE APÓLICES (${POLICY_DATA.policies.length})\n\n`;
+    
+    POLICY_DATA.policies.forEach(policy => {
+        const mainCoverages = policy.coverage.slice(0, 3).join(', ');
+        const extraCoverages = policy.coverage.length > 3 ? ` +${policy.coverage.length - 3} mais` : '';
+        
+        list += `📄 ${policy.number} - ${policy.clientName}\n`;
+        list += `   Tipo: ${policy.type} | Status: ${policy.status}\n`;
+        list += `   Vencimento: ${policy.endDate} | Premiação: R$ ${policy.premium?.toFixed(2) || '0.00'}\n`;
+        list += `   Coberturas: ${mainCoverages}${extraCoverages}\n`;
+        list += `   Sinistros: ${policy.claims?.length || 0}\n\n`;
+    });
+
+    alert(list);
+}
+
+// 7. Registrar sinistro em apólice específica
+function registerClaimToPolicy() {
+    const search = prompt('Digite o número da apólice para registrar sinistro:');
+    if (search === null) return;
+    if (!search) {
+        alert('Por favor, digite o número da apólice!');
+        return;
+    }
+
+    const policy = POLICY_DATA.policies.find(p => p.number === search);
+
+    if (!policy) {
+        alert('Apólice não encontrada!');
+        return;
+    }
+
+    if (policy.status !== 'Ativa') {
+        alert('Não é possível registrar sinistro em apólice inativa!');
+        return;
+    }
+
+    // Mostrar coberturas disponíveis para ajudar o usuário
+    const coverageList = policy.coverage.map((cov, index) => `${index + 1}. ${cov}`).join('\n');
+    const type = prompt(`Tipo de sinistro para ${policy.type}:\nCoberturas disponíveis:\n${coverageList}\n\nDigite o tipo de sinistro:`);
+    if (type === null) return;
+    if (!type) {
+        alert('Tipo de sinistro é obrigatório!');
+        return;
+    }
+
+    const description = prompt('Descrição do ocorrido:');
+    if (description === null) return;
+    
+    let incidentDate = prompt('Data do sinistro (DD/MM/AAAA) ou deixe em branco para data atual:');
+    if (incidentDate === null) return;
+    if (!incidentDate) {
+        incidentDate = new Date().toLocaleDateString('pt-BR');
+    }
+
+    const claim = {
+        id: Date.now(),
+        type: type,
+        date: incidentDate,
+        description: description,
+        status: 'Registrado',
+        policyNumber: policy.number,
+        photos: []
+    };
+
+    if (!policy.claims) policy.claims = [];
+    policy.claims.push(claim);
+    savePolicies();
+
+    // Também adiciona ao sistema principal de sinistros
+    DATA.claims.push({
+        id: claim.id,
+        type: type,
+        date: new Date().toISOString(),
+        status: 'Registrado',
+        policy: policy.number,
+        notes: description,
+        photos: []
+    });
+    save();
+
+    // Perguntar se deseja adicionar fotos
+    const addPhotos = confirm('Deseja adicionar fotos do sinistro?');
+    if (addPhotos) {
+        openClaimPhotosModal(claim.id);
+    }
+
+    alert(`Sinistro registrado na apólice ${policy.number}\nNº do sinistro: ${claim.id}`);
+    logActivity(`Sinistro registrado: ${type} - Apólice: ${policy.number}`);
+    renderAll();
+}
+
+// 8. Ver sinistros de uma apólice
+function viewPolicyClaims() {
+    const search = prompt('Digite o número da apólice:');
+    if (search === null) return;
+    if (!search) {
+        alert('Por favor, digite o número da apólice!');
+        return;
+    }
+
+    const policy = POLICY_DATA.policies.find(p => p.number === search);
+
+    if (!policy || !policy.claims || policy.claims.length === 0) {
+        alert('Nenhum sinistro encontrado para esta apólice.');
+        return;
+    }
+
+    let claimsList = `SINISTROS - APÓLICE ${policy.number}\nTipo: ${policy.type}\nCoberturas: ${policy.coverage.join(', ')}\n\n`;
+    
+    policy.claims.forEach(claim => {
+        claimsList += `🔸 ${claim.type} (${claim.date})\n`;
+        claimsList += `   Descrição: ${claim.description}\n`;
+        claimsList += `   Status: ${claim.status}\n`;
+        claimsList += `   ID: ${claim.id}\n`;
+        claimsList += `   Fotos: ${claim.photos ? claim.photos.length : 0}\n\n`;
+    });
+
+    alert(claimsList);
+}
+
+// Função para visualizar detalhes completos da apólice
+function viewPolicyDetails(policyNumber) {
+    const policy = POLICY_DATA.policies.find(p => p.number === policyNumber);
+    if (!policy) return alert('Apólice não encontrada!');
+    
+    const details = `
+DETALHES COMPLETOS DA APÓLICE:
+
+Número: ${policy.number}
+Segurado: ${policy.clientName}
+Tipo: ${policy.type}
+Status: ${policy.status}
+Valor: R$ ${(policy.premium || 0).toFixed(2)}
+Início: ${policy.startDate}
+Término: ${policy.endDate}
+
+COBERTURAS (${policy.coverage.length}):
+${policy.coverage.map(cov => `  ✓ ${cov}`).join('\n')}
+
+SINISTROS: ${policy.claims?.length || 0} ocorrências
+
+${policy.cancellationReason ? `Motivo do cancelamento: ${policy.cancellationReason}` : ''}
+${policy.cancelledAt ? `Cancelada em: ${new Date(policy.cancelledAt).toLocaleDateString('pt-BR')}` : ''}
+    `.trim();
+    
+    alert(details);
+}
+
+
+// Função para visualizar detalhes completos da apólice
+function viewPolicyDetails(policyNumber) {
+    const policy = POLICY_DATA.policies.find(p => p.number === policyNumber);
+    if (!policy) return alert('Apólice não encontrada!');
+    
+    const details = `
+DETALHES DA APÓLICE:
+
+Número: ${policy.number}
+Segurado: ${policy.clientName}
+Tipo: ${policy.type}
+Status: ${policy.status}
+Valor: R$ ${(policy.premium || 0).toFixed(2)}
+Início: ${policy.startDate}
+Término: ${policy.endDate}
+Coberturas: ${policy.coverage.join(', ') || 'Nenhuma'}
+Sinistros: ${policy.claims?.length || 0}
+
+${policy.cancellationReason ? `Motivo do cancelamento: ${policy.cancellationReason}` : ''}
+    `.trim();
+    
+    alert(details);
+}
+
+// ---------------------- Foto de Perfil ----------------------
+let selectedPhoto = null;
+
+function openPhotoUpload() {
+    document.getElementById('photoModal').style.display = 'flex';
+    // Atualizar preview com foto atual
+    updatePreview();
+}
+
+function closePhotoUpload() {
+    document.getElementById('photoModal').style.display = 'none';
+    selectedPhoto = null;
+    document.getElementById('photoInput').value = '';
+}
+
+function previewPhoto() {
+    const file = document.getElementById('photoInput').files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            selectedPhoto = e.target.result;
+            updatePreview();
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function updatePreview() {
+    const previewAvatar = document.getElementById('previewAvatar');
+    const previewInitials = document.getElementById('previewInitials');
+    
+    if (selectedPhoto) {
+        previewAvatar.innerHTML = `<img src="${selectedPhoto}" alt="Preview">`;
+    } else if (DATA.client.profilePhoto) {
+        previewAvatar.innerHTML = `<img src="${DATA.client.profilePhoto}" alt="Preview">`;
+    } else {
+        previewAvatar.innerHTML = `<div>${getInitials()}</div>`;
+    }
+}
+
+function removePhoto() {
+    selectedPhoto = null;
+    DATA.client.profilePhoto = null;
+    updatePreview();
+    save();
+    renderAll();
+    closePhotoUpload();
+}
+
+function savePhoto() {
+    if (selectedPhoto) {
+        DATA.client.profilePhoto = selectedPhoto;
+        save();
+        renderAll();
+        closePhotoUpload();
+        alert('Foto de perfil atualizada com sucesso!');
+    } else {
+        alert('Selecione uma foto primeiro.');
+    }
+}
+
+function getInitials() {
+    const name = DATA.client.name || '';
+    return name.split(' ').map(s => s[0]).slice(0, 2).join('').toUpperCase();
+}
+
+// ---------------------- Render ----------------------
+function renderAll(){
+    // personal info
+    document.getElementById('clientName').textContent = DATA.client.name || '';
+    document.getElementById('cpf').textContent = DATA.client.cpf || '';
+    document.getElementById('email').textContent = DATA.client.email || '';
+    
+    // Avatar
+    const avatar = document.getElementById('avatar');
+    const avatarInitials = document.getElementById('avatarInitials');
+    
+    if (DATA.client.profilePhoto) {
+        avatar.innerHTML = `<img src="${DATA.client.profilePhoto}" alt="Foto de perfil"><div class="avatar-edit">Alterar foto</div>`;
+    } else {
+        avatarInitials.textContent = getInitials();
+    }
+
+    // coverages
+    const covEl = document.getElementById('coverages'); covEl.innerHTML = '';
+    DATA.coverages.forEach(c=>{
+        const div = document.createElement('div'); div.className='coverage';
+        div.innerHTML = `<div style='font-weight:600'>${c.name}</div><div><label class='switch'><input type='checkbox' ${c.active? 'checked': ''} onchange="toggleCoverage('${c.key}')"><span class='slider'></span></label></div>`;
+        covEl.appendChild(div);
+    });
+
+    // notifications
+    const notifEl = document.getElementById('notifications'); notifEl.innerHTML='';
+    DATA.notifications.slice().reverse().forEach(n=>{
+        const d = document.createElement('div'); d.className='notif'; d.innerHTML=`<div style='font-weight:700'>${n.title}</div><div class='small'>${fmtDate(n.date)} ${n.read ? '' : '<span style="color:green;font-weight:700;margin-left:8px">• novo</span>'}</div>`;
+        notifEl.appendChild(d);
+    });
+
+    // invoices
+    
+    const tbody = document.querySelector('#invoicesTable tbody'); tbody.innerHTML='';
+    DATA.invoices.forEach(inv=>{
+        let statusClass = inv.status==='paid' ? 'status-paid' : inv.status==='due' ? 'status-due' : 'status-over';
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${inv.policy}</td><td>${fmtDate(inv.due)}</td><td class='${statusClass}'>${inv.status.toUpperCase()}</td><td>${money(inv.amount)}</td>
+        <td class='actions'>
+            <button class='btn secondary' onclick='downloadBoleto(${inv.id})'>Boleto</button>
+            <button class='btn' onclick='payInvoice(${inv.id},"card")'>Pagar (Cartão)</button>
+            <button class='btn' onclick='payInvoice(${inv.id},"pix")'>Pagar (PIX)</button>
+        </td>`;
+        tbody.appendChild(tr);
+    });
+
+    // policies list
+    const policiesList = document.getElementById('policiesList'); 
+    policiesList.innerHTML = '';
+    
+    if (POLICY_DATA.policies.length === 0) {
+        policiesList.innerHTML = '<div class="small muted" style="text-align:center;padding:20px">Nenhuma apólice cadastrada</div>';
+    } else {
+        POLICY_DATA.policies.slice().reverse().forEach(policy => {
+            const div = document.createElement('div'); 
+            div.className = 'sin-item';
+            
+            let statusClass = 'status-active';
+            if (policy.status === 'Cancelada') statusClass = 'status-cancelled';
+            if (policy.status === 'Renovada') statusClass = 'status-renewed';
+            if (policy.status === 'Expirada') statusClass = 'status-expired';
+            
+            div.innerHTML = `
+                <div>
+                    <div style='font-weight:700'>${policy.number} — ${policy.type}</div>
+                    <div class='small'>${policy.clientName} • Vencimento: ${policy.endDate}</div>
+                    <div style='margin-top:4px'><span class='status-badge ${statusClass}'>${policy.status}</span></div>
+                </div>
+                <div style='text-align:right'>
+                    <div style='font-weight:700;color:#0f3b5a'>R$ ${(policy.premium || 0).toFixed(2)}</div>
+                    <div class='small' style='margin-top:6px'>
+                        <button class='btn secondary' onclick='viewPolicyDetails("${policy.number}")'>Ver</button>
+                    </div>
+                </div>
+            `;
+            policiesList.appendChild(div);
+        });
+    }
+
+    // claims
+    const cl = document.getElementById('claimsList'); cl.innerHTML='';
+    DATA.claims.forEach(c=>{
+        const div = document.createElement('div'); div.className='sin-item';
+        const photoCount = c.photos ? c.photos.length : 0;
+        div.innerHTML = `
+            <div>
+                <div style='font-weight:700'>${c.type} — ${c.policy}</div>
+                <div class='small'>${fmtDate(c.date)} • ${c.notes}</div>
+                ${photoCount > 0 ? `<div class='small'>📷 ${photoCount} foto(s)</div>` : ''}
+            </div>
+            <div style='text-align:right'>
+                <div style='font-weight:700;color:#0f3b5a'>${c.status}</div>
+                <div class='small' style='margin-top:6px'>
+                    <button class='btn secondary' onclick='viewClaim(${c.id})'>Ver</button>
+                    ${photoCount > 0 ? `<button class='btn' onclick='openClaimPhotosModal(${c.id})'>Fotos</button>` : ''}
+                </div>
+            </div>
+        `;
+        cl.appendChild(div);
+    });
+
+    // activity
+    const act = document.getElementById('activityLog'); act.innerHTML='';
+    DATA.activity.slice().reverse().slice(0,6).forEach(a=>{ const li = document.createElement('li'); li.textContent = `[${fmtDate(a.date)}] ${a.text}`; act.appendChild(li); });
+
+    // counts & totals
+    document.getElementById('countPolicies').textContent = POLICY_DATA.policies.length;
+    document.getElementById('countClaims').textContent = DATA.claims.length;
+    document.getElementById('countDue').textContent = DATA.invoices.filter(i => i.status !== 'paid').length;
+    const total = DATA.invoices.reduce((s,i)=> s + (i.status==='paid'?0:i.amount), 0);
+    document.getElementById('totalBalance').textContent = money(total);
+}
+
+function viewClaim(id){ 
+    const c = DATA.claims.find(x=>x.id===id); 
+    if(!c) return alert('Sinistro não encontrado'); 
+    
+    let claimInfo = `Sinistro #${c.id}\nTipo: ${c.type}\nApólice: ${c.policy}\nData: ${fmtDate(c.date)}\nStatus: ${c.status}\nNotas: ${c.notes}`;
+    
+    if (c.photos && c.photos.length > 0) {
+        claimInfo += `\n\nFotos: ${c.photos.length} foto(s) anexada(s)`;
+    }
+    
+    alert(claimInfo); 
+}
+
+  function openClaimForm(){ 
+      const type = prompt('Tipo de sinistro (ex: Colisão, Roubo, Vidros, Incêndio):');
+      if(!type) return;
+      
+      const notes = prompt('Descreva o ocorrido (breve):');
+      
+      // Opção para data e hora personalizada
+      let customDateTime = prompt('Data e hora do sinistro (formato: DD/MM/AAAA HH:MM) ou deixe em branco para usar data/hora atual:');
+      let incidentDate;
+      
+      if(customDateTime) {
+          // Validação básica do formato
+          const dateTimeRegex = /^(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2})$/;
+          const match = customDateTime.match(dateTimeRegex);
+          
+          if(match) {
+              const [_, day, month, year, hours, minutes] = match;
+              incidentDate = new Date(year, month - 1, day, hours, minutes);
+              
+              // Verifica se a data é válida
+              if(isNaN(incidentDate.getTime())) {
+                  alert('Data/hora inválida. Usando data/hora atual.');
+                  incidentDate = new Date();
+              }
+          } else {
+              alert('Formato inválido. Use DD/MM/AAAA HH:MM. Usando data/hora atual.');
+              incidentDate = new Date();
+          }
+      } else {
+          incidentDate = new Date();
+      }
+      
+      const newId = Date.now();
+      const newClaim = {
+          id: newId,
+          type: type,
+          date: incidentDate.toISOString(),
+          status: 'Registrado',
+          policy: 'Seguro Automóvel',
+          notes: notes || '',
+          photos: []
+      };
+      
+      DATA.claims.push(newClaim);
+      
+      logActivity(`Registrou sinistro: ${type}`);
+      save();
+      
+      // Perguntar se deseja adicionar fotos
+      const addPhotos = confirm('Deseja adicionar fotos do sinistro?');
+      if (addPhotos) {
+          openClaimPhotosModal(newId);
+      }
+      
+      renderAll();
+      alert('Sinistro registrado. Nossa equipe entrará em contato.');
+  }
+
+function simulateAssistance(kind){ DATA.notifications.push({id:Date.now(),title:`Solicitação de assistência: ${kind} recebida`,date:(new Date()).toISOString(),read:false}); logActivity(`Solicitou assistência: ${kind}`); save(); renderAll(); alert('Solicitação enviada. Um representante de assistência irá contatar você.'); }
+
+// ---------------------- Chat (simulado) ----------------------
+// Estrutura para histórico do chat
+const CHAT_HISTORY = JSON.parse(localStorage.getItem('mainlock:chat_history_' + logged.email)) || [];
+
+function sendMessage(){
+    const inp = document.getElementById('chatInput'); 
+    const text = inp.value && inp.value.trim(); 
+    if(!text) return;
+    
+    // Adicionar mensagem do usuário
+    appendChat('me', text); 
+    inp.value=''; 
+    
+    // Salvar no histórico
+    const userMessage = {
+        type: 'user',
+        text: text,
+        timestamp: new Date().toISOString()
+    };
+    CHAT_HISTORY.push(userMessage);
+    saveChatHistory();
+    
+    DATA.activity.push({date:(new Date()).toISOString(),text:`Enviou mensagem no chat: ${text}`}); 
+    save();
+    
+    // Resposta automática
+    setTimeout(()=>{ 
+        const reply = autoReply(text); 
+        appendChat('rep', reply); 
+        
+        // Salvar resposta no histórico
+        const botMessage = {
+            type: 'bot',
+            text: reply,
+            timestamp: new Date().toISOString()
+        };
+        CHAT_HISTORY.push(botMessage);
+        saveChatHistory();
+        
+        DATA.activity.push({date:(new Date()).toISOString(),text:`Resposta automática: ${reply}`}); 
+        save(); 
+        renderAll(); 
+    }, 800 + Math.random()*1000);
+}
+
+function appendChat(who, text){
+    const c = document.getElementById('messages'); 
+    const div = document.createElement('div'); 
+    div.className = 'msg ' + (who==='me' ? 'me' : 'rep'); 
+    div.textContent = text; 
+    c.appendChild(div); 
+    c.scrollTop = c.scrollHeight;
+}
+
+function autoReply(text){
+    const t = text.toLowerCase();
+    
+    // Saudações
+    if(t.includes('oi') || t.includes('olá') || t.includes('ola') || t.includes('bom dia') || t.includes('boa tarde') || t.includes('boa noite')) {
+        return 'Olá! Sou o assistente virtual da MainLock Seguros. Em que posso ajudá-lo hoje?';
+    }
+    
+    // Agradecimentos
+    if(t.includes('obrigado') || t.includes('obrigada') || t.includes('valeu') || t.includes('agradeço')) {
+        return 'De nada! Estou aqui para ajudar. Precisa de mais alguma coisa?';
+    }
+    
+    // Faturas e pagamentos
+    if(t.includes('fatura') || t.includes('pagar') || t.includes('boleto') || t.includes('vencimento') || t.includes('pagamento')) {
+        return 'Você pode pagar suas faturas diretamente no painel. Posso ajudar com:\n• 2ª via de boleto\n• Pagamento via PIX\n• Pagamento com cartão\n• Consulta de vencimentos';
+    }
+    
+    // Sinistros
+    if(t.includes('sinistro') || t.includes('acidente') || t.includes('colisão') || t.includes('colisao') || t.includes('roubo') || t.includes('furto')) {
+        return 'Para registrar um sinistro, clique em "Registrar novo sinistro" no painel. Posso ajudar com:\n• Abertura de sinistro\n• Acompanhamento\n• Documentação necessária\n• Upload de fotos';
+    }
+    
+    // Apólices
+    if(t.includes('apólice') || t.includes('apolice') || t.includes('seguro') || t.includes('cobertura') || t.includes('renovação') || t.includes('renovacao')) {
+        return 'Você pode gerenciar suas apólices no painel principal. Posso ajudar com:\n• Consulta de apólices\n• Renovação\n• Cancelamento\n• Inclusão de coberturas';
+    }
+    
+    // Assistência
+    if(t.includes('assist') || t.includes('vidro') || t.includes('chaveiro') || t.includes('guincho') || t.includes('reboque') || t.includes('pneu') || t.includes('borracheiro')) {
+        return 'Tenho opções de assistência 24h! Posso solicitar:\n• Guincho/reboque\n• Chaveiro\n• Borracheiro\n• Pane seca/elétrica\n• Vidros\nDeseja acionar algum serviço?';
+    }
+    
+    // Coberturas
+    if(t.includes('cobertura') || t.includes('cover') || t.includes('proteção') || t.includes('protecao') || t.includes('incluir') || t.includes('excluir')) {
+        return 'Sobre coberturas, você pode:\n• Consultar coberturas ativas\n• Adicionar novas coberturas\n• Remover coberturas\n• Ver detalhes de cada cobertura\nGostaria de gerenciar suas coberturas?';
+    }
+    
+    // Valores e preços
+    if(t.includes('valor') || t.includes('preço') || t.includes('preco') || t.includes('custo') || t.includes('pagamento') || t.includes('mensalidade')) {
+        return 'Para informações sobre valores, posso ajudar com:\n• Consulta de premiação\n• Proposta de novos seguros\n• Alteração de valores\n• Descontos disponíveis';
+    }
+    
+    // Cancelamento
+    if(t.includes('cancelar') || t.includes('cancelamento') || t.includes('rescisão') || t.includes('rescisao') || t.includes('encerrar')) {
+        return 'Para cancelar uma apólice, acesse o gerenciador de apólices. É importante verificar:\n• Período de carência\n• Multas por cancelamento\n• Reembolso de valores\nDeseja mais informações?';
+    }
+    
+    // Contato humano
+    if(t.includes('humano') || t.includes('pessoa') || t.includes('atendente') || t.includes('operador') || t.includes('falar com') || t.includes('telefone')) {
+        return 'Posso conectar você com um de nossos atendentes! Nossos canais:\n📞 Telefone: 0800-123-4567\n📧 Email: atendimento@mainlock.com.br\n💬 WhatsApp: (11) 98765-4321\nHorário: Seg a Sex, 8h às 18h';
+    }
+    
+    // Emergência
+    if(t.includes('emergência') || t.includes('emergencia') || t.includes('urgente') || t.includes('socorro') || t.includes('ajuda') || t.includes('rápido') || t.includes('rapido')) {
+        return '🚨 PARA EMERGÊNCIAS 24H:\n📞 Central de Sinistros: 0800-765-4321\n🚑 Ambulância: 192\n🚓 Polícia: 190\n🚒 Bombeiros: 193\nPosso ajudar com algo específico?';
+    }
+    
+    // Horário de funcionamento
+    if(t.includes('horário') || t.includes('horario') || t.includes('funcionamento') || t.includes('hora') || t.includes('aberto') || t.includes('fechado')) {
+        return '⏰ Nossos horários de atendimento:\n• Chat: 24 horas\n• Telefone: Seg a Sex, 8h às 18h\n• Emergências: 24 horas\n• E-mail: Resposta em até 24h';
+    }
+    
+    // Documentação
+    if(t.includes('documento') || t.includes('documentação') || t.includes('documentacao') || t.includes('cpf') || t.includes('rg') || t.includes('comprovante')) {
+        return '📋 Documentos comuns necessários:\n• CPF/RG\n• Comprovante de residência\n• Nota fiscal do bem\n• Fotos do sinistro\n• Boletim de ocorrência\nPrecisa de alguma documentação específica?';
+    }
+    
+    // Status de processos
+    if(t.includes('status') || t.includes('situação') || t.includes('situacao') || t.includes('andamento') || t.includes('processo') || t.includes('analise')) {
+        return 'Para consultar status de processos:\n• Sinistros: Painel de Sinistros\n• Pagamentos: Painel de Faturas\n• Apólices: Gerenciador de Apólices\nDeseja verificar algum processo específico?';
+    }
+    
+    // Despedidas
+    if(t.includes('tchau') || t.includes('bye') || t.includes('até') || t.includes('ate') || t.includes('sair') || t.includes('encerrar')) {
+        return 'Foi um prazer ajudar! Se precisar de mais alguma coisa, estarei aqui. Tenha um ótimo dia! 😊';
+    }
+    
+    // Resposta padrão para mensagens não reconhecidas
+    const defaultReplies = [
+        'Entendi sua mensagem! Um de nossos especialistas pode dar uma resposta mais específica. Enquanto isso, posso ajudar com informações sobre faturas, sinistros ou apólices?',
+        'Compreendo sua dúvida! Posso conectar você com um atendente especializado. Posso ajudar com algo mais simples enquanto isso?',
+        'Obrigado pela mensagem! Para uma resposta mais precisa, recomendo entrar em contato com nossa equipe especializada. Posso ajudar com informações básicas?',
+        'Recebemos sua mensagem! Nossa equipe irá analisar e retornar em breve. Enquanto isso, posso ajudar com alguma solicitação mais simples?'
+    ];
+    
+    return defaultReplies[Math.floor(Math.random() * defaultReplies.length)];
+}
+
+// Função para carregar histórico do chat
+function loadChatHistory() {
+    const messagesContainer = document.getElementById('messages');
+    messagesContainer.innerHTML = '';
+    
+    // Mensagem de boas-vindas se não houver histórico
+    if (CHAT_HISTORY.length === 0) {
+        appendChat('rep', 'Olá! Sou o assistente virtual da MainLock Seguros. Posso ajudar com:\n• Faturas e pagamentos\n• Sinistros\n• Apólices\n• Assistência 24h\n• Informações sobre coberturas\n\nEm que posso ajudá-lo hoje?');
+        return;
+    }
+    
+    // Carregar histórico
+    CHAT_HISTORY.forEach(message => {
+        appendChat(message.type === 'user' ? 'me' : 'rep', message.text);
+    });
+}
+
+// Função para salvar histórico do chat
+function saveChatHistory() {
+    // Manter apenas as últimas 50 mensagens para não sobrecarregar o localStorage
+    if (CHAT_HISTORY.length > 50) {
+        CHAT_HISTORY.splice(0, CHAT_HISTORY.length - 50);
+    }
+    localStorage.setItem('mainlock:chat_history_' + logged.email, JSON.stringify(CHAT_HISTORY));
+}
+
+// Função para limpar histórico do chat
+function clearChatHistory() {
+    if (confirm('Deseja limpar todo o histórico do chat?\nEsta ação não pode ser desfeita.')) {
+        CHAT_HISTORY.length = 0;
+        saveChatHistory();
+        loadChatHistory();
+        alert('Histórico do chat limpo com sucesso!');
+    }
+}
+
+// Função para exportar histórico do chat
+function exportChatHistory() {
+    if (CHAT_HISTORY.length === 0) {
+        alert('Nenhum histórico de conversa disponível para exportar.');
+        return;
+    }
+    
+    let chatText = `Histórico do Chat - MainLock Seguros\n`;
+    chatText += `Cliente: ${DATA.client.name}\n`;
+    chatText += `Data: ${new Date().toLocaleDateString('pt-BR')}\n`;
+    chatText += `========================================\n\n`;
+    
+    CHAT_HISTORY.forEach(message => {
+        const time = new Date(message.timestamp).toLocaleTimeString('pt-BR');
+        const sender = message.type === 'user' ? 'Você' : 'Atendente';
+        chatText += `[${time}] ${sender}: ${message.text}\n\n`;
+    });
+    
+    const blob = new Blob([chatText], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `chat_mainlock_${new Date().toISOString().split('T')[0]}.txt`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    
+    alert('Histórico do chat exportado com sucesso!');
+}
+function importChatHistory() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.txt,.json';
+    
+    input.onchange = (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const content = e.target.result;
+                
+                // Tentar parsear como JSON primeiro
+                try {
+                    const importedHistory = JSON.parse(content);
+                    
+                    if (Array.isArray(importedHistory)) {
+                        if (confirm(`Deseja importar ${importedHistory.length} mensagens do arquivo?`)) {
+                            CHAT_HISTORY.length = 0; // Limpar histórico atual
+                            importedHistory.forEach(msg => CHAT_HISTORY.push(msg));
+                            saveChatHistory();
+                            loadChatHistory();
+                            alert('Histórico importado com sucesso!');
+                        }
+                        return;
+                    }
+                } catch (jsonError) {
+                    // Se não for JSON, tratar como texto plano
+                    console.log('Arquivo não é JSON, tentando parse como texto...');
+                }
+                
+                // Parse de texto plano (formato de exportação)
+                const lines = content.split('\n');
+                const importedMessages = [];
+                let currentMessage = null;
+                
+                for (const line of lines) {
+                    // Detectar início de nova mensagem
+                    const messageMatch = line.match(/\[(\d{2}:\d{2}:\d{2})\] (Você|Atendente): (.+)/);
+                    
+                    if (messageMatch) {
+                        // Salvar mensagem anterior se existir
+                        if (currentMessage) {
+                            importedMessages.push(currentMessage);
+                        }
+                        
+                        const [, time, sender, text] = messageMatch;
+                        currentMessage = {
+                            type: sender === 'Você' ? 'user' : 'bot',
+                            text: text.trim(),
+                            timestamp: new Date().toISOString() // Usar data atual pois não temos no arquivo
+                        };
+                    } else if (currentMessage && line.trim()) {
+                        // Continuar texto da mensagem atual
+                        currentMessage.text += '\n' + line.trim();
+                    }
+                }
+                
+                // Adicionar última mensagem
+                if (currentMessage) {
+                    importedMessages.push(currentMessage);
+                }
+                
+                if (importedMessages.length > 0) {
+                    if (confirm(`Deseja importar ${importedMessages.length} mensagens do arquivo de texto?`)) {
+                        CHAT_HISTORY.length = 0;
+                        importedMessages.forEach(msg => CHAT_HISTORY.push(msg));
+                        saveChatHistory();
+                        loadChatHistory();
+                        alert('Histórico importado com sucesso!');
+                    }
+                } else {
+                    alert('Não foi possível encontrar mensagens no arquivo selecionado.');
+                }
+                
+            } catch (error) {
+                console.error('Erro ao importar histórico:', error);
+                alert('Erro ao importar arquivo. Verifique se o formato está correto.');
+            }
+        };
+        
+        reader.readAsText(file);
+    };
+    
+    input.click();
+}
+
+// Adicionar botões de controle do chat
+function addChatControls() {
+    const chatWindow = document.querySelector('.chat-window');
+    const chatHeader = chatWindow.querySelector('.section-title').parentElement;
+    
+    // Adicionar botões se ainda não existirem
+    if (!chatWindow.querySelector('.chat-controls')) {
+        const controlsDiv = document.createElement('div');
+        controlsDiv.className = 'chat-controls';
+        controlsDiv.style.cssText = 'display: flex; gap: 8px; margin-top: 8px; justify-content: flex-end; flex-wrap: wrap;';
+        
+        controlsDiv.innerHTML = `
+
+            <button class="btn secondary" onclick="importChatHistory()" title="Importar conversa">📂 Importar</button>
+            <button class="btn secondary" onclick="exportChatHistory()" title="Exportar conversa">📥 Exportar</button>
+            <button class="btn secondary" onclick="clearChatHistory()" title="Limpar histórico">🗑️ Limpar</button>
+        `;
+        
+        chatHeader.appendChild(controlsDiv);
+    }
+}
+
+// Inicializar chat quando a página carregar
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        loadChatHistory();
+        addChatControls();
+    }, 100);
+});
+
+
+// ---------------------- Activity log helper ----------------------
+function logActivity(text){ DATA.activity.push({date:(new Date()).toISOString(), text}); save(); }
+
+// ---------------------- Export / Misc ----------------------
+function exportData(){ const blob = new Blob([JSON.stringify(DATA,null,2)],{type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `mainlock_data_${encodeURIComponent(DATA.client.email)}.json`; a.click(); URL.revokeObjectURL(a.href); }
+
+// ---------------------- Auto notify for due invoices ----------------------
+const TODAY = new Date();
+function autoNotifyDue(){
+    DATA.invoices.forEach(inv=>{
+        if(inv.status!=='paid'){
+            const days = daysBetween(inv.due, TODAY);
+            if(days <= 5 && days >= 0){
+                const exists = DATA.notifications.some(n=>n.title.includes(`Fatura do ${inv.policy}`));
+                if(!exists) DATA.notifications.push({id:Date.now()+Math.random(), title:`Fatura do ${inv.policy} vence em ${days} dia(s)`, date:(new Date()).toISOString(), read:false});
+            }
+        }
+    });
+    save();
+}
+
+// ---------------------- Clock ----------------------
+function updateClock(){ document.getElementById('clock').textContent = new Date().toLocaleDateString('pt-BR'); }
+setInterval(updateClock, 60000); updateClock();
+
+// ---------------------- Logout ----------------------
+function logout(){ localStorage.removeItem('mainlock:logged'); alert('Logout efetuado'); window.location.href='index.html'; }
+
+// ---------------------- Init ----------------------
+// Inicializar dados de exemplo para apólices
+function initializeSamplePolicies() {
+    if (POLICY_DATA.policies.length === 0) {
+        POLICY_DATA.policies = [
+            {
+                id: 1,
+                number: 'AUTO2024001',
+                clientName: DATA.client.name || 'Cliente',
+                type: 'Auto',
+                premium: 1500.00,
+                startDate: '20/09/2025',
+                endDate: '31/12/2028',
+                coverage: ['Colisão', 'Roubo', 'Incêndio'],
+                status: 'Ativa',
+                createdAt: new Date().toISOString(),
+                claims: []
+            }
+        ];
+        POLICY_DATA.nextId = 2;
+        savePolicies();
+    }
+}
+
+initializeSamplePolicies();
+autoNotifyDue(); 
+renderAll();
+appendChat('rep','Olá, sou o assistente virtual da MainLock. Em que posso ajudar hoje?');
+
+// Expose some handlers (for inline onclick)
+window.toggleCoverage = toggleCoverage;
+window.clearNotifications = clearNotifications;
+window.downloadBoleto = downloadBoleto;
+window.payInvoice = payInvoice;
+window.viewClaim = viewClaim;
+window.openClaimForm = openClaimForm;
+window.simulateAssistance = simulateAssistance;
+window.exportData = exportData;
+window.logout = logout;
+window.openPhotoUpload = openPhotoUpload;
+window.closePhotoUpload = closePhotoUpload;
+window.previewPhoto = previewPhoto;
+window.removePhoto = removePhoto;
+window.savePhoto = savePhoto;
+window.openInsuranceManagement = openInsuranceManagement;
+window.managePolicy = managePolicy;
+window.createNewPolicy = createNewPolicy;
+window.viewPolicy = viewPolicy;
+window.renewPolicy = renewPolicy;
+window.cancelPolicy = cancelPolicy;
+window.listAllPolicies = listAllPolicies;
+window.registerClaimToPolicy = registerClaimToPolicy;
+window.viewPolicyClaims = viewPolicyClaims;
+window.viewPolicyDetails = viewPolicyDetails;
+window.openClaimPhotosModal = openClaimPhotosModal;
+window.closeClaimPhotosModal = closeClaimPhotosModal;
+</script>
+</body>
+</html>
